@@ -384,6 +384,32 @@ module AggsDSL =
                     "\"" + name + "\":{\"filter\":" + queryBody + ",\"aggs\":{" + aggBody + "}}"
         ] |> String.concat ","
 
+[<AutoOpen>]
+module SourceDSL =
+    type Includes = string list
+    type Excludes = string list
+    
+    type SourceBody =
+    | Nothing
+    | Only of string
+    | List of string list
+    | Pattern of Includes * Excludes
+    
+    let internal serializeList l =
+        "[" + (l |> List.map (fun field -> "\"" + field + "\"") |> String.concat ",") + "]"
+    
+    let internal SourceBodyToJSON (body: SourceBody) : string =
+        match body with
+        | Nothing ->
+            "false"
+        | Only str ->
+            "\"" + str + "\""
+        | List l ->
+            serializeList l
+        | Pattern (i, e) ->
+            "{\"includes\":" + serializeList i + ", \"excludes\":" + serializeList e + "}"
+    
+
 type ElasticDSL = 
     | Search of SearchBody list
 
@@ -394,6 +420,7 @@ and SearchBody =
     | Aggs of AggsFieldsBody list
     | From of int
     | Size of int
+    | Source_ of SourceDSL.SourceBody
     
 let ElasticDSLToJson (Search elasticBody:ElasticDSL) =
     "{" + 
@@ -416,5 +443,7 @@ let ElasticDSLToJson (Search elasticBody:ElasticDSL) =
                     "\"from\":" + x.ToString()
                 | Size x -> 
                     "\"size\":" + x.ToString()
+                | Source_ x ->
+                    "\"_source\": " + SourceDSL.SourceBodyToJSON x  
         ] |> String.concat ",")
     + "}"
