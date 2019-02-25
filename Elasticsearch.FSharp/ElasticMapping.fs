@@ -4,7 +4,7 @@ module Mapping =
 
     open System
     open System.Runtime.InteropServices
-    open System.Reflection
+    open System.Collections.Generic
     
     
     type ElasticType    (
@@ -21,7 +21,8 @@ module Mapping =
                         [<Optional; DefaultParameterValue(null:string)>] analyzer:string, 
                         [<Optional; DefaultParameterValue(true)>] enabled:bool,
                         [<Optional; DefaultParameterValue(null:string)>] format:string,
-                        [<Optional; DefaultParameterValue(false)>] useProperties:bool
+                        [<Optional; DefaultParameterValue(false)>] useProperties:bool,
+                        [<Optional; DefaultParameterValue(10)>] maxDepth:int
                      ) =
         inherit System.Attribute()
         
@@ -30,6 +31,7 @@ module Mapping =
         member val Enabled          = enabled       with get 
         member val Format           = format        with get
         member val UseProperties    = useProperties with get
+        member val MaxDepth         = maxDepth      with get            
         
     module rec ElasticMappingDSL = 
         type ElasticMapping =
@@ -124,6 +126,45 @@ module Mapping =
                     | Mappings mappingsBody ->
                         "\"mappings\":" + (MappingsBodyListToJSON mappingsBody)
             ] |> String.concat ","
+
+        let private PrevPropNameDefault propMapping = [propMapping]
+        
+        let rec private GetSingularTypePropertiesMappings
+                (prevPropName:PropertyMapping -> PropertyMapping list)
+                (propMappings: PropertyMapping list)
+                (outContainer: ref<List<PropertyMapping list>>) =
+            for (propName, propDef) in propMappings do
+                let mutable hasProperties = false
+                for propMappingField in propDef do
+                    match propMappingField with
+                    | Properties props ->
+                        hasProperties <- true
+                        let fn propMapping = prevPropName (propName, [Properties [propMapping]])
+                        GetSingularTypePropertiesMappings fn props outContainer
+                    | _ -> ()
+                if not <| hasProperties then
+                    outContainer.Value.Add(prevPropName (propName, propDef))
+
+        let ElasticMappingToPutMappingJSON mapping =
+            [
+                match mapping with
+                | ElasticMapping mappingBody ->
+                    for mb in mappingBody do
+                        match mb with
+                        | Mappings mappingsBody ->
+                            for (typeName, typeMappingsBody) in mappingsBody do
+                                for tm in typeMappingsBody do
+                                    match tm with
+                                    | TypeProperties propertyMappings ->
+                                       let propList = ref (new List<PropertyMapping list>())
+                                       GetSingularTypePropertiesMappings PrevPropNameDefault propertyMappings propList
+                                       for propertyMappings in propList.Value do
+                                           yield
+                                               "{\"properties\":{" + PropertyMappingListToJSON propertyMappings + "}}"
+                                    | _ -> ()
+                                    
+                        | _ -> ()
+            ]
             
         let ElasticMappingToJSON mapping =
             "{" + 
@@ -145,7 +186,7 @@ module Mapping =
         else
             t
         
-    let rec private GetTypePropertyMappings (t:System.Type) : PropertyMapping list = 
+    let rec private GetTypePropertyMappings (t:System.Type) (depth:int) : PropertyMapping list = 
         [
             for prop in t.GetProperties() do
                 let propAttributes = prop.GetCustomAttributes(typeofElasticField, true)
@@ -157,11 +198,12 @@ module Mapping =
                     let propType = prop.PropertyType
                     
                     if propAttr.UseProperties then
-                        let subTypeProps = GetTypePropertyMappings (GetRealType propType)
-                        yield 
-                            prop.Name, [
-                                Properties subTypeProps
-                            ] 
+                        if depth < propAttr.MaxDepth then  
+                            let subTypeProps = GetTypePropertyMappings (GetRealType propType) (depth+1)
+                            yield 
+                                prop.Name, [
+                                    Properties subTypeProps
+                                ]
                     else 
                         yield 
                             prop.Name, (seq {
@@ -200,10 +242,9 @@ module Mapping =
         match attr with 
         | Some attr -> 
             let attr = attr :?> ElasticType
-            let propertyMappings = GetTypePropertyMappings t
+            let propertyMappings = GetTypePropertyMappings t 0
             
             attr.TypeName, [
-                AllEnabled attr.AllEnabled
                 TypeMappingBody.TypeProperties propertyMappings
             ]
         | None -> 
