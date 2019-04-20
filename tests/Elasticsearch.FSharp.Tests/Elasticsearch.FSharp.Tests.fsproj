@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FsCheck" Version="2.14.0" />
+        <PackageReference Include="FsCheck.NUnit" Version="2.14.0" />
+        <PackageReference Include="nunit" Version="3.11.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="Queries\ScriptQuery.fs" />
+      <Compile Include="Query.fs" />
+      <Compile Include="Search.fs" />
+      <Compile Include="Sort.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Elasticsearch.FSharp\Elasticsearch.FSharp.fsproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="DSL\Script.fs" />
+    <Compile Include="DSL\Queries\TermQuery.fs" />
+    <Compile Include="DSL\Queries\TermsQuery.fs" />
+    <Compile Include="DSL\Queries\MatchQuery.fs" />
+    <Compile Include="DSL\Queries\MultiMatchQuery.fs" />
+    <Compile Include="DSL\Queries\RangeQuery.fs" />
+    <Compile Include="DSL\Queries\ScriptQuery.fs" />
+    <Compile Include="DSL\Query.fs" />
+    <Compile Include="DSL\Sort.fs" />
+    <Compile Include="DSL\Source.fs" />
+    <Compile Include="DSL\Aggs.fs" />
+    <Compile Include="DSL\Search.fs" />
+    <Compile Include="DSL\Serialization\Script.fs" />
+    <Compile Include="DSL\Serialization\Queries\TermQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\TermsQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\MatchQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\MultiMatchQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\RangeQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\ScriptQuery.fs" />
+    <Compile Include="DSL\Serialization\Query.fs" />
+    <Compile Include="DSL\Serialization\Sort.fs" />
+    <Compile Include="DSL\Serialization\Source.fs" />
+    <Compile Include="DSL\Serialization\Aggs.fs" />
+    <Compile Include="DSL\Serialization\Search.fs" />
+    <Compile Include="DSL\Serialization\Interface.fs" />
+    <Compile Include="Mapping\ElasticMapping.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+</Project>
