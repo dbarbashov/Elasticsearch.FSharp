@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="Helpers.fs" />
         <Compile Include="Queries\ScriptQuery.fs" />
       <Compile Include="Query.fs" />
       <Compile Include="Search.fs" />

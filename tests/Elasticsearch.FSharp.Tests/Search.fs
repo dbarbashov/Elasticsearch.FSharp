@@ -28,6 +28,53 @@ let ``Sort serializes correctly``() =
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
     
+[<Property(MaxTest=10000)>]
+let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldName2, paramName, paramValue) =
+    let query =
+        Search [
+            ScriptFields [
+                fieldName1, [
+                    Lang "painless"
+                    Source script1
+                ]
+                fieldName2, [
+                    Lang "painless"
+                    Source script2
+                    Params [
+                        paramName, paramValue
+                    ]
+                ]
+            ]
+        ]
+    let expected =
+        sprintf
+            """{"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}},"%s":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}}"""
+            fieldName1
+            script1
+            fieldName2
+            script2
+            paramName
+            paramValue
+            
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)
+    
+[<Property(MaxTest=10000)>]
+let ``Aggs serializes correctly``(aggName, aggFieldName) =
+    let query =
+        Search [
+            Aggs [
+                NamedAgg (
+                    aggName, Avg [
+                        AggField aggFieldName
+                    ]
+                )
+            ]
+        ]
+    let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}""" aggName aggFieldName
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)
+    
 [<Property>]
 let ``From serializes correctly``(from) =
     let query =
