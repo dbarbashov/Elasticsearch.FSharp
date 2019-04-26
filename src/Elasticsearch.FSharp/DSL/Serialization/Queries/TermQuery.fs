@@ -9,11 +9,8 @@ let TermQueryToJson ((name, termBody) : string * (TermQueryField list) ) =
                 ([
                     for termParam in termBody->
                         match termParam with 
-                        | ExactValue x ->
-                            if x = null then
-                                "null"
-                            else
-                                "\"" + x + "\""
+                        | ExactValue null -> "{\"value\":\"\"}" // TODO: fail here?
+                        | ExactValue x -> "{\"value\":\"" + x + "\"}"
                 ] |> String.concat ",")
         )
     + "}"

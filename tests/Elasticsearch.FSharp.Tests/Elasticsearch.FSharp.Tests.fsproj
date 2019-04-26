@@ -14,10 +14,11 @@
 
     <ItemGroup>
         <Compile Include="Helpers.fs" />
+        <Compile Include="Script.fs" />
         <Compile Include="Queries\ScriptQuery.fs" />
       <Compile Include="Query.fs" />
-      <Compile Include="Search.fs" />
       <Compile Include="Sort.fs" />
+      <Compile Include="Search.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -5,14 +5,11 @@ open Elasticsearch.FSharp.DSL
 let MultimatchBodyToJson multimatchBody =
     "{" +
         ([
-             for field in multimatchBody do
+             for field in multimatchBody ->
                  match field with
                  | Fields fieldList ->
-                     yield ("\"fields\":[" + (List.map (fun s -> "\"" + s + "\"") fieldList |> String.concat ",") + "]")
-                 | MultiMatchQuery query ->
-                     if query = null then
-                         yield "\"query\":null"
-                     else 
-                         yield "\"query\":\"" + query + "\""
+                     ("\"fields\":[" + (List.map (fun s -> "\"" + s + "\"") fieldList |> String.concat ",") + "]")
+                 | MultiMatchQuery null -> "\"query\":\"\"" // TODO: fail here?
+                 | MultiMatchQuery query -> "\"query\":\"" + query + "\""
         ] |> String.concat ",")
     + "}"
