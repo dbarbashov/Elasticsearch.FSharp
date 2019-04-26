@@ -3,14 +3,30 @@ module Elasticsearch.FSharp.Tests.Sort
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open NUnit.Framework
+open FsCheck.NUnit
 
-[<Test>]
-let ``Sort serializes correctly``() =
+[<Property(MaxTest=10000)>]
+let ``Sort serializes correctly``(fieldName, sortOrder, sortMode) =
     let query =
         Search [
-            Sort ["myField", [Order SortOrder.Asc; Mode SortMode.Avg]]
+            Sort [fieldName, [Order sortOrder; Mode sortMode]]
             Query MatchAll
         ]
-    let expected = """{"sort":[{"myField":{"order":"asc","mode":"avg"}}],"query":{"match_all":{}}}"""
+        
+    let orderStr =
+        match sortOrder with
+        | SortOrder.Asc -> "asc"
+        | SortOrder.Desc -> "desc"
+        
+    let modeStr =
+        match sortMode with
+        | SortMode.Min -> "min"
+        | SortMode.Max -> "max"
+        | SortMode.Sum -> "sum"
+        | SortMode.Avg -> "avg"
+        | SortMode.Median -> "median"
+        
+    let expected =
+        sprintf """{"sort":[{"%s":{"order":"%s","mode":"%s"}}],"query":{"match_all":{}}}""" fieldName orderStr modeStr
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
