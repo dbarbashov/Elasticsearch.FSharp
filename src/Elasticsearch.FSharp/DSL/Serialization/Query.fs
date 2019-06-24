@@ -53,6 +53,9 @@ let QueryBodyToJson (queryPart: QueryBody) =
         | MultiMatch multimatchBody ->
             let body = MultiMatchQuery.MultimatchBodyToJson multimatchBody
             "\"multi_match\":" + body
+        | MatchPhrasePrefix matchPhrasePrefixBody ->
+            let body = MatchPhrasePrefixQuery.MatchPhrasePrefixQueryToJson matchPhrasePrefixBody
+            "\"match_phrase_prefix\":" + body
         | Exists field ->
             "\"exists\":{\"field\":\"" + field + "\"}"
         | TypeEquals t ->
