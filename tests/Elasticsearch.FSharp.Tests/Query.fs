@@ -114,6 +114,18 @@ let ``"multi_match" serializes correctly``(field, queryString) =
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
 
+[<Property>]
+let ``"match_phrase_prefix* serializes correctly`` (fieldName, fieldValue, expansions) =
+    let query =
+        Search [
+            Query (
+                MatchPhrasePrefix (fieldName, [MatchPhrasePrefixQueryField.MatchQuery fieldValue; MaxExpansions expansions])
+            )
+        ]
+    let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}""" fieldName fieldValue expansions
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)
+
 [<Property(MaxTest=10000)>]
 let ``"exists" serialization works correctly``(fieldName) =
     let query =

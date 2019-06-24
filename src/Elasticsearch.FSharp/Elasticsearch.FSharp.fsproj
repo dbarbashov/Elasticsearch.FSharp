@@ -10,6 +10,7 @@
     <Compile Include="DSL\Queries\TermsQuery.fs" />
     <Compile Include="DSL\Queries\MatchQuery.fs" />
     <Compile Include="DSL\Queries\MultiMatchQuery.fs" />
+    <Compile Include="DSL\Queries\MatchPhrasePrefixQuery.fs" />
     <Compile Include="DSL\Queries\RangeQuery.fs" />
     <Compile Include="DSL\Queries\ScriptQuery.fs" />
     <Compile Include="DSL\Query.fs" />
@@ -22,6 +23,7 @@
     <Compile Include="DSL\Serialization\Queries\TermsQuery.fs" />
     <Compile Include="DSL\Serialization\Queries\MatchQuery.fs" />
     <Compile Include="DSL\Serialization\Queries\MultiMatchQuery.fs" />
+    <Compile Include="DSL\Serialization\Queries\MatchPhrasePrefixQuery.fs" />
     <Compile Include="DSL\Serialization\Queries\RangeQuery.fs" />
     <Compile Include="DSL\Serialization\Queries\ScriptQuery.fs" />
     <Compile Include="DSL\Serialization\Query.fs" />

@@ -11,8 +11,8 @@ let MatchQueryToJson ((name, matchBody) : string * (MatchQueryField list) ) =
                         match matchParam with 
                         | Operator x -> 
                             "\"operator\":\"" + x + "\""
-                        | MatchQuery null -> "\"query\":\"\"" // TODO: fail here?
-                        | MatchQuery x -> "\"query\":\"" + x + "\""
+                        | MatchQueryField.MatchQuery null -> "\"query\":\"\"" // TODO: fail here?
+                        | MatchQueryField.MatchQuery x -> "\"query\":\"" + x + "\""
                         | CutoffFrequency x -> 
                             "\"cutoff_frequency\":" + x.ToString()
                         | ZeroTermsQuery x -> 

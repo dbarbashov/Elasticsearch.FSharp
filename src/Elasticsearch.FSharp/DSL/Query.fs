@@ -10,6 +10,7 @@ type QueryBody =
     | Range of RangeQuery
     | Script of ScriptQuery
     | MultiMatch of MultiMatchQuery
+    | MatchPhrasePrefix of MatchPhrasePrefixQuery
     | Exists of fieldName:string
     | Raw of rawString:string
     | TypeEquals of string
