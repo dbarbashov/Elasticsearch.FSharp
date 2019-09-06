@@ -44,8 +44,8 @@ let rec AggsBodyToJSON (fields: AggsFieldsBody list) =
                 AggBodyToJSON (name, agg)
             | MoreAggs aggs ->
                 "\"aggs\":{" + (AggsBodyToJSON aggs) + "}"
-//                | FilterAgg (name, query, agg) ->
-//                    let queryBody = QueryBodyToJson query
-//                    let aggBody = AggBodyToJSON (name, agg)
-//                    "\"" + name + "\":{\"filter\":" + queryBody + ",\"aggs\":{" + aggBody + "}}"
+            | FilterAgg (name, query, agg) ->
+                let queryBody = Query.QueryBodyToJson query
+                let aggBody = AggBodyToJSON (name, agg)
+                "\"" + name + "\":{\"filter\":" + queryBody + ",\"aggs\":{" + aggBody + "}}"
     ] |> String.concat ","

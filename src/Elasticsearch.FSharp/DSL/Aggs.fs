@@ -3,7 +3,7 @@ namespace Elasticsearch.FSharp.DSL
 type AggsFieldsBody = 
     | NamedAgg of string * AggBody
     | MoreAggs of AggsFieldsBody list
-//    | FilterAgg of string * QueryBody * AggBody
+    | FilterAgg of string * QueryBody * AggBody
 
 and AggWeightConfig = 
     | WeightField of string
@@ -27,4 +27,3 @@ and AggBody =
     | Stats of AggParam list
     | AggTerms of AggParam list
     | AggDateHistogram of AggParam list
-//    | AggFilter of QueryBody
