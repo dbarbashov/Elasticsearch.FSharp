@@ -14,6 +14,7 @@
 
     <ItemGroup>
         <Compile Include="Helpers.fs" />
+        <Compile Include="Mapping.fs" />
         <Compile Include="Script.fs" />
         <Compile Include="Queries\ScriptQuery.fs" />
       <Compile Include="Query.fs" />

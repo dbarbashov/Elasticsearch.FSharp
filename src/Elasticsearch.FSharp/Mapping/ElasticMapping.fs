@@ -1,8 +1,8 @@
 namespace Elasticsearch.FSharp
+open System
 
 module Mapping = 
 
-    open System
     open System.Runtime.InteropServices
     open System.Collections.Generic
     
@@ -31,7 +31,21 @@ module Mapping =
         member val Enabled          = enabled       with get 
         member val Format           = format        with get
         member val UseProperties    = useProperties with get
-        member val MaxDepth         = maxDepth      with get            
+        member val MaxDepth         = maxDepth      with get
+    
+    [<AttributeUsage(AttributeTargets.Property, AllowMultiple = true)>]
+    type ElasticSubField(
+                            fieldName: string,
+                            [<Optional; DefaultParameterValue(null:string)>] fieldType:string, 
+                            [<Optional; DefaultParameterValue(null:string)>] analyzer:string, 
+                            [<Optional; DefaultParameterValue(true)>] enabled:bool,
+                            [<Optional; DefaultParameterValue(null:string)>] format:string,
+                            [<Optional; DefaultParameterValue(false)>] useProperties:bool,
+                            [<Optional; DefaultParameterValue(10)>] maxDepth:int
+                        ) =
+        inherit ElasticField(fieldType, analyzer, enabled, format, useProperties, maxDepth)
+        
+        member val FieldName = fieldName with get
         
     module rec ElasticMappingDSL = 
         type ElasticMapping =
@@ -45,7 +59,7 @@ module Mapping =
             | Setting of string*string
             | BoolSetting of string*bool
             
-        and TypeMapping = 
+        and TypeMapping =
             string * (TypeMappingBody list)
              
         and TypeMappingBody = 
@@ -60,6 +74,7 @@ module Mapping =
             | Enabled of bool
             | Format of string
             | Properties of PropertyMapping list
+            | Fields of PropertyMapping list
             
         let internal SettingsBodyListToJSON settingsBody =
             "{" + 
@@ -76,18 +91,24 @@ module Mapping =
         let internal PropertyMappingFieldListToJSON propertyMappingFields = 
             "{" + 
                 ([
-                    for pmf in propertyMappingFields -> 
+                    for pmf in propertyMappingFields do 
                         match pmf with 
                         | Type v -> 
-                            "\"type\":\"" + v + "\"" 
+                            yield "\"type\":\"" + v + "\"" 
                         | Analyzer v -> 
-                            "\"analyzer\":\"" + v + "\"" 
+                            yield "\"analyzer\":\"" + v + "\"" 
                         | Enabled v -> 
-                            "\"enabled\":" + (if v then "true" else "false")
+                            yield "\"enabled\":" + (if v then "true" else "false")
                         | Format v -> 
-                            "\"format\":\"" + v + "\""
+                            yield "\"format\":\"" + v + "\""
                         | Properties v -> 
-                            "\"properties\":{" + (PropertyMappingListToJSON v) + "}"
+                            yield "\"properties\":{" + (PropertyMappingListToJSON v) + "}"
+                        | Fields v->
+                            match v with
+                            | [] ->
+                                ()
+                            | _ -> 
+                                yield "\"fields\":{" + (PropertyMappingListToJSON v) + "}"
                 ] |> String.concat ",")
             + "}"
             
@@ -175,7 +196,6 @@ module Mapping =
     
     open ElasticMappingDSL
     
-    let private typeofElasticField = typeof<ElasticField>
     let private typeofElasticType = typeof<ElasticType>
         
     let rec private GetRealType (t:System.Type) : System.Type =
@@ -185,43 +205,60 @@ module Mapping =
             GetRealType t.GenericTypeArguments.[0]
         else
             t
+    
+    let rec FieldToMapping (propAttr: ElasticField) : PropertyMappingField list =
+        (seq {
+            if propAttr.Enabled then 
+                yield PropertyMappingField.Type propAttr.FieldType
+            
+            if not <| String.IsNullOrWhiteSpace propAttr.Analyzer then   
+                yield Analyzer propAttr.Analyzer
+                
+            if not propAttr.Enabled then 
+                yield Enabled false
+                
+            if not <| String.IsNullOrWhiteSpace propAttr.Format then
+                yield Format propAttr.Format
+                
+        } |> Seq.toList)
+    
+    exception UnknownElasticAttributeException of System.Type
         
     let rec private GetTypePropertyMappings (t:System.Type) (depth:int) : PropertyMapping list = 
         [
             for prop in t.GetProperties() do
-                let propAttributes = prop.GetCustomAttributes(typeofElasticField, true)
-                let propAttr = Array.tryHead propAttributes
+                let propAttributes = prop.GetCustomAttributes(typeof<ElasticField>, true)
+                let propType = prop.PropertyType
                 
-                match propAttr with 
-                | Some propAttr ->
-                    let propAttr = propAttr :?> ElasticField
-                    let propType = prop.PropertyType
+                yield prop.Name, [
+                    yield 
+                        propAttributes
+                        |> Array.choose (fun a -> match a with | :? ElasticSubField as f -> Some f | _ -> None)
+                        |> Array.map
+                               (fun propAttr ->
+                                    propAttr.FieldName, propAttr |> FieldToMapping
+                               )
+                        |> Array.toList
+                        |> Fields
                     
-                    if propAttr.UseProperties then
-                        if depth < propAttr.MaxDepth then  
-                            let subTypeProps = GetTypePropertyMappings (GetRealType propType) (depth+1)
-                            yield 
-                                prop.Name, [
-                                    Properties subTypeProps
-                                ]
-                    else 
-                        yield 
-                            prop.Name, (seq {
-                                if propAttr.Enabled then 
-                                    yield PropertyMappingField.Type propAttr.FieldType
-                                
-                                if not <| String.IsNullOrWhiteSpace propAttr.Analyzer then   
-                                    yield Analyzer propAttr.Analyzer
-                                    
-                                if not propAttr.Enabled then 
-                                    yield Enabled false
-                                    
-                                if not <| String.IsNullOrWhiteSpace propAttr.Format then
-                                    yield Format propAttr.Format
-                                    
-                            } |> Seq.toList)
-                | None -> 
-                    ()
+                    yield! [
+                        for propAttr in propAttributes do
+                        match propAttr with
+                        | :? ElasticSubField ->
+                            ()
+                        | :? ElasticField as propAttr ->
+                            if propAttr.UseProperties then
+                                if depth < propAttr.MaxDepth then  
+                                    let subTypeProps = GetTypePropertyMappings (GetRealType propType) (depth+1)
+                                    yield 
+                                        Properties subTypeProps
+                                        
+                            else 
+                                yield! (propAttr |> FieldToMapping)
+                        | _ ->
+                            raise(UnknownElasticAttributeException(propAttr.GetType()))
+                    ]
+                ]
         ]
         
     exception IsNotElasticTypeException of System.Type
