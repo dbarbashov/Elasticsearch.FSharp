@@ -104,3 +104,13 @@ let ``Source serializes correctly``() =
     let expected = """{"_source":false}"""
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
+
+[<Test>]
+let ``Raw serialized correctly``() =
+    let query =
+        Search [
+            SearchBody.Raw ("query", """{"match_all":{}}""")
+        ]
+    let expected = """{"query":{"match_all":{}}}"""
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)

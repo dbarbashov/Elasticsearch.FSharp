@@ -2,7 +2,6 @@ module Elasticsearch.FSharp.Tests.Query
 
 open NUnit.Framework
 open FsCheck.NUnit
-
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 
@@ -23,6 +22,16 @@ let ``"match_none" serializes correctly``() =
             Query MatchNone
         ]
     let expected = """{"query":{"match_none":{}}}"""
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)
+    
+[<Test>]
+let ``"ids" serializes correctly``() =
+    let query =
+        Search [
+            Query (IDs ["foo"; "bar"])
+        ]
+    let expected = """{"query":{"ids":{"values":["foo","bar"]}}}"""
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
     
@@ -103,14 +112,22 @@ let ``"script" serializes correctly``(scriptSource) =
     Assert.AreEqual(expected, actual)
     
 [<Property>]
-let ``"multi_match" serializes correctly``(field, queryString) = 
+// TODO don't know how to specify range for tie_breaker value (by default values from -Infinity to Infinity are generated)
+let ``"multi_match" serializes correctly``(queryType, field, queryString, expansions, slop) = 
     let query =
         Search [
             Query (
-                MultiMatch [Fields [field]; MultiMatchQuery queryString]
+                MultiMatch [
+                    QueryType queryType
+                    Fields [field]
+                    MultiMatchQuery queryString
+                    MaxExpansions expansions
+                    Slop slop
+                    TieBreaker 0.3
+                ]
             )
         ]
-    let expected = sprintf """{"query":{"multi_match":{"fields":["%s"],"query":"%s"}}}""" field queryString
+    let expected = sprintf """{"query":{"multi_match":{"type":"%s","fields":["%s"],"query":"%s","max_expansions":%d,"slop":%d,"tie_breaker":0.3}}}""" queryType field queryString expansions slop
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
 
@@ -119,7 +136,13 @@ let ``"match_phrase_prefix* serializes correctly`` (fieldName, fieldValue, expan
     let query =
         Search [
             Query (
-                MatchPhrasePrefix (fieldName, [MatchPhrasePrefixQueryField.MatchQuery fieldValue; MaxExpansions expansions])
+                MatchPhrasePrefix (
+                    fieldName,
+                    [
+                        MatchPhrasePrefixQueryField.MatchQuery fieldValue
+                        MatchPhrasePrefixQueryField.MaxExpansions expansions
+                    ]
+                )
             )
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}""" fieldName fieldValue expansions
@@ -143,7 +166,7 @@ let ``"raw" serialization works correctly``(rawQuery) =
     let query =
         Search [
             Query(
-                Raw rawQuery
+                QueryBody.Raw rawQuery
             )
         ]
     let expected = sprintf """{"query":{%s}}""" rawQuery
