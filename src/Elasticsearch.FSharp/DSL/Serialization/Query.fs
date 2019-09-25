@@ -32,6 +32,8 @@ let QueryBodyToJson (queryPart: QueryBody) =
             "\"match_all\":{}"
         | MatchNone ->
             "\"match_none\":{}"
+        | IDs ids ->
+            "\"ids\":" + "{\"values\":[" + (ids |> List.map (fun x -> "\"" + x + "\"") |> String.concat ",") + "]}"
         | Bool boolQuery ->
             let body = BoolQueryToJson boolQuery
             "\"bool\":" + body
@@ -60,7 +62,7 @@ let QueryBodyToJson (queryPart: QueryBody) =
             "\"exists\":{\"field\":\"" + field + "\"}"
         | TypeEquals t ->
             "\"type\":{\"value\":\"" + t + "\"}"
-        | Raw body ->
+        | QueryBody.Raw body ->
             body
     + "}"
     

@@ -24,6 +24,8 @@ let ElasticDSLToJson (Search elasticBody:ElasticDSL) =
                 | Size x -> 
                     "\"size\":" + x.ToString()
                 | Source_ x ->
-                    "\"_source\":" + Source.SourceBodyToJSON x  
+                    "\"_source\":" + Source.SourceBodyToJSON x
+                | Raw (key, value) ->
+                    "\""+key+"\":" + value
         ] |> String.concat ",")
     + "}"
