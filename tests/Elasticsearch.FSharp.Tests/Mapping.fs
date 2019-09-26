@@ -3,6 +3,7 @@ module Elasticsearch.FSharp.Tests.Mapping
 open NUnit.Framework
 
 open System.Text.RegularExpressions
+open System.Text.RegularExpressions
 open Elasticsearch.FSharp.Mapping
 open Elasticsearch.FSharp.Mapping.ElasticMappingDSL
 
@@ -53,6 +54,80 @@ let ``Type serializes correctly``() =
             "\s*",
             ""
         )
+    let actual = mappingJson
+    printf "%s" mappingJson
+    Assert.AreEqual(expected, actual)
+    
+[<ElasticType("message")>]
+type Elastic_Message = {
+    [<ElasticField("keyword")>]
+    [<ElasticSubField("raw", fieldType="keyword")>]
+    [<ElasticSubField("ru", fieldType="text", analyzer="ru")>]
+    [<ElasticSubField("en", fieldType="text", analyzer="en")>]
+    id: string
+    
+    [<ElasticField(useProperties=true, maxDepth=1)>]
+    reply_to_message: Elastic_Message option
+}
+
+[<Test>]
+let ``Recursive type serializes correctly``() =
+    let typeMapping = GenerateElasticMappings typeof<Elastic_Message>
+    let indexMapping =
+            ElasticMapping [
+                Mappings [
+                    typeMapping
+                ]
+            ]
+    let mappingJson = ElasticMappingToJSON indexMapping
+    let expected =
+        Regex.Replace(
+            """{
+                "mappings": {
+                    "message": {
+                        "properties": {
+                            "id": {
+                                "fields": {
+                                    "raw": {
+                                        "type": "keyword"
+                                    },
+                                    "ru": {
+                                        "type": "text",
+                                        "analyzer": "ru"
+                                    },
+                                    "en": {
+                                        "type": "text",
+                                        "analyzer": "en"
+                                    }
+                                },
+                                "type": "keyword"
+                            },
+                            "reply_to_message": {
+                                "properties": {
+                                    "id": {
+                                        "fields": {
+                                            "raw": {
+                                                "type": "keyword"
+                                            },
+                                            "ru": {
+                                                "type": "text",
+                                                "analyzer": "ru"
+                                            },
+                                            "en": {
+                                                "type": "text",
+                                                "analyzer": "en"
+                                            }
+                                        },
+                                        "type": "keyword"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }""",
+            "\s*",
+            "")
     let actual = mappingJson
     printf "%s" mappingJson
     Assert.AreEqual(expected, actual)
