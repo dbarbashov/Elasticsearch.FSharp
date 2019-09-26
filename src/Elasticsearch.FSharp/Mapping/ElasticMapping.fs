@@ -230,18 +230,8 @@ module Mapping =
                 let propAttributes = prop.GetCustomAttributes(typeof<ElasticField>, true)
                 let propType = prop.PropertyType
                 
-                yield prop.Name, [
-                    yield 
-                        propAttributes
-                        |> Array.choose (fun a -> match a with | :? ElasticSubField as f -> Some f | _ -> None)
-                        |> Array.map
-                               (fun propAttr ->
-                                    propAttr.FieldName, propAttr |> FieldToMapping
-                               )
-                        |> Array.toList
-                        |> Fields
-                    
-                    yield! [
+                let props =
+                    [
                         for propAttr in propAttributes do
                         match propAttr with
                         | :? ElasticSubField ->
@@ -251,14 +241,28 @@ module Mapping =
                                 if depth < propAttr.MaxDepth then  
                                     let subTypeProps = GetTypePropertyMappings (GetRealType propType) (depth+1)
                                     yield 
-                                        Properties subTypeProps
-                                        
+                                        Properties subTypeProps 
                             else 
                                 yield! (propAttr |> FieldToMapping)
                         | _ ->
                             raise(UnknownElasticAttributeException(propAttr.GetType()))
                     ]
-                ]
+
+                if props.Length > 0 then
+                    let fields =
+                        propAttributes
+                        |> Array.choose (fun a -> match a with | :? ElasticSubField as f -> Some f | _ -> None)
+                        |> Array.map
+                               (fun propAttr ->
+                                    propAttr.FieldName, propAttr |> FieldToMapping
+                               )
+                        |> Array.toList
+                    
+                    yield prop.Name, [
+                        if fields.Length > 0 then
+                            yield fields |> Fields
+                        yield! props
+                    ]
         ]
         
     exception IsNotElasticTypeException of System.Type
