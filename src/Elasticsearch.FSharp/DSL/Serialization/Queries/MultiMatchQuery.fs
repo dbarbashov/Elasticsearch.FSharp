@@ -15,6 +15,6 @@ let MultimatchBodyToJson multimatchBody =
                  | MultiMatchQueryField.MaxExpansions cnt -> """"max_expansions":""" + cnt.ToString()
                  | Slop cnt -> """"slop":""" + cnt.ToString()
                  | TieBreaker tie -> """"tie_breaker":""" + tie.ToString()
-                 | MultiMatchQueryField.Raw (key, value) -> "\""+key+"\":" + value
+                 | MultiMatchQueryField.MultiMatchRaw (key, value) -> "\""+key+"\":" + value
         ] |> String.concat ",")
     + "}"
