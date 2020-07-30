@@ -1,48 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <PackageId>Elasticsearch.FSharp</PackageId>
-    <Version>1.2.1</Version>
-    <Authors>lkmfwe and contributors</Authors>
-    <Company>No company</Company>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>Elasticsearch.FSharp</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="DSL\Script.fs" />
-    <Compile Include="DSL\Queries\TermQuery.fs" />
-    <Compile Include="DSL\Queries\TermsQuery.fs" />
-    <Compile Include="DSL\Queries\MatchQuery.fs" />
-    <Compile Include="DSL\Queries\MultiMatchQuery.fs" />
-    <Compile Include="DSL\Queries\MatchPhrasePrefixQuery.fs" />
-    <Compile Include="DSL\Queries\RangeQuery.fs" />
-    <Compile Include="DSL\Queries\ScriptQuery.fs" />
-    <Compile Include="DSL\Query.fs" />
-    <Compile Include="DSL\Sort.fs" />
-    <Compile Include="DSL\Source.fs" />
-    <Compile Include="DSL\Aggs.fs" />
-    <Compile Include="DSL\Search.fs" />
-    <Compile Include="DSL\Serialization\Script.fs" />
-    <Compile Include="DSL\Serialization\Queries\TermQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\TermsQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\MatchQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\MultiMatchQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\MatchPhrasePrefixQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\RangeQuery.fs" />
-    <Compile Include="DSL\Serialization\Queries\ScriptQuery.fs" />
-    <Compile Include="DSL\Serialization\Query.fs" />
-    <Compile Include="DSL\Serialization\Sort.fs" />
-    <Compile Include="DSL\Serialization\Source.fs" />
-    <Compile Include="DSL\Serialization\Aggs.fs" />
-    <Compile Include="DSL\Serialization\Search.fs" />
-    <Compile Include="DSL\Serialization\Interface.fs" />
-    <Compile Include="Mapping\ElasticMapping.fs" />
-  </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Builders\Query\BoolBuilder.fs" />
+      <Compile Include="Builders\Query\MatchAllBuilder.fs" />
+      <Compile Include="Builders\Aggs\AggBuilder.fs" />
+      <Compile Include="Builders\Aggs\TermsBuilder.fs" />
+      <Compile Include="Builders\Sort\SortByBuilder.fs" />
+      <Compile Include="Builders\ElasticBuilder.fs" />
+      <Compile Include="TopLevelModule.fs" />
+    </ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="NEST" Version="7.8.2" />
+    </ItemGroup>
 
 </Project>

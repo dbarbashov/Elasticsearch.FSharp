@@ -3,15 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DC92765B-25F4-41AB-A282-282B5399ACCA}"
 	ProjectSection(SolutionItems) = preProject
 												.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elasticsearch.FSharp", "src\Elasticsearch.FSharp\Elasticsearch.FSharp.fsproj", "{69E3270B-8AC7-433A-83F7-D6C3505C5C87}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09ABBCAA-2DA8-4F73-A61F-EEBFC6A4C8E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C7CA7432-0FBF-42DC-9D65-41A5AD510829}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elasticsearch.FSharp.Tests", "tests\Elasticsearch.FSharp.Tests\Elasticsearch.FSharp.Tests.fsproj", "{0BA09266-FC24-40E8-B60C-E072EF0E08B4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elasticsearch.FSharp", "src\Elasticsearch.FSharp\Elasticsearch.FSharp.fsproj", "{3C96FF6B-EA2C-4678-A5F6-E0880267542A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elasticsearch.FSharp.Tests", "tests\Elasticsearch.FSharp.Tests\Elasticsearch.FSharp.Tests.fsproj", "{1AD77E98-F150-41F0-9347-766A00C85A8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,17 +20,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{69E3270B-8AC7-433A-83F7-D6C3505C5C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69E3270B-8AC7-433A-83F7-D6C3505C5C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69E3270B-8AC7-433A-83F7-D6C3505C5C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69E3270B-8AC7-433A-83F7-D6C3505C5C87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BA09266-FC24-40E8-B60C-E072EF0E08B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BA09266-FC24-40E8-B60C-E072EF0E08B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BA09266-FC24-40E8-B60C-E072EF0E08B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BA09266-FC24-40E8-B60C-E072EF0E08B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C96FF6B-EA2C-4678-A5F6-E0880267542A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C96FF6B-EA2C-4678-A5F6-E0880267542A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C96FF6B-EA2C-4678-A5F6-E0880267542A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C96FF6B-EA2C-4678-A5F6-E0880267542A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AD77E98-F150-41F0-9347-766A00C85A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AD77E98-F150-41F0-9347-766A00C85A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AD77E98-F150-41F0-9347-766A00C85A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AD77E98-F150-41F0-9347-766A00C85A8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{69E3270B-8AC7-433A-83F7-D6C3505C5C87} = {09ABBCAA-2DA8-4F73-A61F-EEBFC6A4C8E7}
-		{0BA09266-FC24-40E8-B60C-E072EF0E08B4} = {C7CA7432-0FBF-42DC-9D65-41A5AD510829}
+		{3C96FF6B-EA2C-4678-A5F6-E0880267542A} = {09ABBCAA-2DA8-4F73-A61F-EEBFC6A4C8E7}
+		{1AD77E98-F150-41F0-9347-766A00C85A8A} = {C7CA7432-0FBF-42DC-9D65-41A5AD510829}
 	EndGlobalSection
 EndGlobal
