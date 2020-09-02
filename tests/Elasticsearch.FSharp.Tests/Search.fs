@@ -74,6 +74,24 @@ let ``Aggs serializes correctly``(aggName, aggFieldName) =
     let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}""" aggName aggFieldName
     let actual = ToJson query
     Assert.AreEqual(expected, actual)
+
+[<Property>]
+let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) =
+    let query =
+        Search [
+            Aggs [
+                NamedAgg (
+                    aggName, WeightedAvg [
+                        AggWeight (WeightValueField aggValueField)
+                        AggWeight (WeightField aggFieldName)
+                    ]
+                )
+            ]
+        ]
+    let expected = sprintf """{"aggs":{"%s":{"weighted_avg":{"value":{"field":"%s"},"weight":{"field":"%s"}}}}}"""
+                       aggName aggValueField aggFieldName
+    let actual = ToJson query
+    Assert.AreEqual(expected, actual)
     
 [<Property>]
 let ``From serializes correctly``(from) =
