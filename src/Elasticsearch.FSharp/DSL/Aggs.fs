@@ -7,6 +7,7 @@ type AggsFieldsBody =
 
 and AggWeightConfig = 
     | WeightField of string
+    | WeightValueField of string
     | Weight of string
 
 and AggParam = 

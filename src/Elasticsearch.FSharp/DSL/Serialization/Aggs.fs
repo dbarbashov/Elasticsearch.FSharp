@@ -13,6 +13,7 @@ let AggParamsToJSON (aggParams:AggParam list) =
             | AggWeight weightConfig -> 
                 match weightConfig with 
                 | WeightField field -> "\"weight\":{\"field\":\"" + field + "\"}"
+                | WeightValueField field -> "\"value\":{\"field\":\"" + field + "\"}"
                 | Weight weight-> "\"weight\":\"" + weight + "\""
             | AggInterval interval -> "\"interval\":\"" + interval + "\""
             | AggFormat format -> "\"format\":\"" + format + "\""
