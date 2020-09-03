@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <PackageId>Elasticsearch.FSharp</PackageId>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <Authors>lkmfwe and contributors</Authors>
     <Company>No company</Company>
   </PropertyGroup>
