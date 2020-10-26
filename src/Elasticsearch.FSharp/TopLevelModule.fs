@@ -4,7 +4,7 @@ open Elasticsearch.FSharp.Builders
 
 let elastic<'T when 'T: not struct>() = ElasticBuilder<'T>()
 
-let match_all = Query.MatchAllBuilder()
+let match_all() = Query.MatchAllBuilder().Zero()
 
 let bool<'T when 'T: not struct> = Query.BoolBuilder<'T>()
 
