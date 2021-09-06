@@ -2,7 +2,7 @@ module Elasticsearch.FSharp.DSL.Serialization.Queries.MatchQuery
 
 open Elasticsearch.FSharp.DSL
 
-let MatchQueryToJson ((name, matchBody) : string * (MatchQueryField list) ) = 
+let matchQueryToJson ((name, matchBody) : string * (MatchQueryField list) ) = 
     "{" + 
         (
             "\"" + name + "\":{" + 

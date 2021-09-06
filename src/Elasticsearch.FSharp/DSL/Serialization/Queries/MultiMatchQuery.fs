@@ -2,7 +2,7 @@ module Elasticsearch.FSharp.DSL.Serialization.Queries.MultiMatchQuery
 
 open Elasticsearch.FSharp.DSL
     
-let MultimatchBodyToJson multimatchBody =
+let multimatchBodyToJson multimatchBody =
     "{" +
         ([
              for field in multimatchBody ->

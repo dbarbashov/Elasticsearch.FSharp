@@ -13,7 +13,7 @@ let ``Query serializes correctly``() =
             Query MatchAll
         ]
     let expected = """{"query":{"match_all":{}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Test>]
@@ -25,7 +25,7 @@ let ``Sort serializes correctly``() =
             ]
         ]
     let expected = """{"sort":[{"myField":{"order":"asc","mode":"avg"}}]}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property(MaxTest=10000)>]
@@ -56,7 +56,7 @@ let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldNam
             paramName
             paramValue
             
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property(MaxTest=10000)>]
@@ -72,7 +72,7 @@ let ``Aggs serializes correctly``(aggName, aggFieldName) =
             ]
         ]
     let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}""" aggName aggFieldName
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
 
 [<Property>]
@@ -90,7 +90,7 @@ let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) 
         ]
     let expected = sprintf """{"aggs":{"%s":{"weighted_avg":{"value":{"field":"%s"},"weight":{"field":"%s"}}}}}"""
                        aggName aggValueField aggFieldName
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -100,7 +100,7 @@ let ``From serializes correctly``(from) =
             From from
         ]
     let expected = sprintf """{"from":%d}""" from
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -110,7 +110,7 @@ let ``Size serializes correctly``(size) =
             Size size
         ]
     let expected = sprintf """{"size":%d}""" size
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Test>]
@@ -120,7 +120,7 @@ let ``Source serializes correctly``() =
             Source_ Nothing
         ]
     let expected = """{"_source":false}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
 
 [<Test>]
@@ -130,5 +130,5 @@ let ``Raw serialized correctly``() =
             SearchBody.Raw ("query", """{"match_all":{}}""")
         ]
     let expected = """{"query":{"match_all":{}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)

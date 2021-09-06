@@ -6,6 +6,6 @@ open Elasticsearch.FSharp.DSL.Serialization.Script
 let ScriptQueryToJson (scriptBody:ScriptField list) = 
     "{" + 
         (
-            "\"script\":{" + (ScriptFieldsToJSON scriptBody) + "}"
+            "\"script\":{" + (scriptFieldsToJson scriptBody) + "}"
         )
     + "}"

@@ -7,7 +7,7 @@ let AggParamsToJSON (aggParams:AggParam list) =
     [
         for param in aggParams ->
             match param with 
-            | AggScript scriptBody -> "\"script\":{" + (Script.ScriptFieldsToJSON scriptBody) + "}"
+            | AggScript scriptBody -> "\"script\":{" + (Script.scriptFieldsToJson scriptBody) + "}"
             | AggValue value -> "\"value\":\"" + value + "\""
             | AggField field -> "\"field\":\"" + field + "\""
             | AggWeight weightConfig -> 
@@ -46,7 +46,7 @@ let rec AggsBodyToJSON (fields: AggsFieldsBody list) =
             | MoreAggs aggs ->
                 "\"aggs\":{" + (AggsBodyToJSON aggs) + "}"
             | FilterAgg (name, query, agg) ->
-                let queryBody = Query.QueryBodyToJson query
+                let queryBody = Query.queryBodyToJson query
                 let aggBody = AggBodyToJSON (name, agg)
                 "\"" + name + "\":{\"filter\":" + queryBody + ",\"aggs\":{" + aggBody + "}}"
     ] |> String.concat ","

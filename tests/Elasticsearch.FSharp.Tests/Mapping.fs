@@ -3,9 +3,8 @@ module Elasticsearch.FSharp.Tests.Mapping
 open NUnit.Framework
 
 open System.Text.RegularExpressions
-open System.Text.RegularExpressions
-open Elasticsearch.FSharp.Mapping
-open Elasticsearch.FSharp.Mapping.ElasticMappingDSL
+open Elasticsearch.FSharp.Mapping.Attributes
+open Elasticsearch.FSharp.Mapping.Json
 
 [<ElasticType("custom_entity_name")>]
 type TestEntity = {
@@ -18,34 +17,27 @@ type TestEntity = {
     [<ElasticSubField("ru", fieldType = "text", analyzer = "russian")>]
     title: string
 }
-    
 
 [<Test>]
 let ``Type serializes correctly``() =
-    let typeMapping = GenerateElasticMappings typeof<TestEntity>
-    let indexMapping =
-            ElasticMapping [
-                Mappings [
-                    typeMapping
-                ]
-            ]
-    let mappingJson = ElasticMappingToJSON indexMapping
+    let mapping = generateElasticMapping typeof<TestEntity>
+    let mappingJson = mapping.ToJson()
     let expected =
         Regex.Replace(
             """{
                 "mappings": {
-                    "custom_entity_name": {
+                    "_doc": {
                         "properties": {
                             "id": {
                                 "type": "long"
                             },
                             "title": {
+                                "type": "text",
                                 "fields": {
                                     "raw": { "type":"keyword" },
                                     "en": { "type":"text", "analyzer":"english" },
                                     "ru": { "type":"text", "analyzer":"russian" }
-                                },
-                                "type": "text"
+                                }
                             }
                         }
                     }
@@ -72,21 +64,16 @@ type Elastic_Message = {
 
 [<Test>]
 let ``Recursive type serializes correctly``() =
-    let typeMapping = GenerateElasticMappings typeof<Elastic_Message>
-    let indexMapping =
-            ElasticMapping [
-                Mappings [
-                    typeMapping
-                ]
-            ]
-    let mappingJson = ElasticMappingToJSON indexMapping
+    let mapping = generateElasticMapping typeof<Elastic_Message>
+    let mappingJson = mapping.ToJson()
     let expected =
         Regex.Replace(
             """{
                 "mappings": {
-                    "message": {
+                    "_doc": {
                         "properties": {
                             "id": {
+                                "type": "keyword",
                                 "fields": {
                                     "raw": {
                                         "type": "keyword"
@@ -99,12 +86,12 @@ let ``Recursive type serializes correctly``() =
                                         "type": "text",
                                         "analyzer": "en"
                                     }
-                                },
-                                "type": "keyword"
+                                }
                             },
                             "reply_to_message": {
                                 "properties": {
                                     "id": {
+                                        "type": "keyword",
                                         "fields": {
                                             "raw": {
                                                 "type": "keyword"
@@ -117,8 +104,7 @@ let ``Recursive type serializes correctly``() =
                                                 "type": "text",
                                                 "analyzer": "en"
                                             }
-                                        },
-                                        "type": "keyword"
+                                        }
                                     }
                                 }
                             }

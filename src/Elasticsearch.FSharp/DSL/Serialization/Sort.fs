@@ -2,7 +2,7 @@ module internal Elasticsearch.FSharp.DSL.Serialization.Sort
 
 open Elasticsearch.FSharp.DSL
 
-let SortModeToJson (sortMode:SortMode) = 
+let sortModeToJson (sortMode:SortMode) = 
     match sortMode with 
     | SortMode.Min -> "\"min\""
     | SortMode.Max -> "\"max\""
@@ -10,28 +10,28 @@ let SortModeToJson (sortMode:SortMode) =
     | SortMode.Avg -> "\"avg\""
     | SortMode.Median -> "\"median\""
     
-let SortOrderToJson sortOrder =
+let sortOrderToJson sortOrder =
     match sortOrder with
     | SortOrder.Asc -> "\"asc\""
     | SortOrder.Desc -> "\"desc\""
     
-let internal SortFieldListToJson (sortFieldList : SortField list ) = 
+let internal sortFieldListToJson (sortFieldList : SortField list ) = 
     "{" + 
         ([
             for field in sortFieldList ->  
                 match field with 
                 | Order orderVal -> 
-                    "\"order\":" + (SortOrderToJson orderVal)
+                    "\"order\":" + (sortOrderToJson orderVal)
                 | Mode modeVal -> 
-                    "\"mode\":" + (SortModeToJson modeVal)
+                    "\"mode\":" + (sortModeToJson modeVal)
         ] |> String.concat ",")
     + "}"
     
-let internal SortBodyListToJson (sortBody:(string * (SortField list)) list) = 
+let internal sortBodyListToJson (sortBody:(string * (SortField list)) list) = 
     "[" +
         ([
             for (name, fields) in sortBody -> 
-                let body = SortFieldListToJson fields 
+                let body = sortFieldListToJson fields 
                 "{\"" + name + "\":" + body + "}"
         ] |> String.concat ",")
     + "]"

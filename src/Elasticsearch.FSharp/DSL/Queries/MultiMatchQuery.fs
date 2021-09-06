@@ -9,5 +9,5 @@ and MultiMatchQueryField =
     | MaxExpansions of int
     | Slop of int
     | TieBreaker of float
-    | MultiMatchRaw of key:string * value:string
+    | MultiMatchRaw of Key: string * Value: string
 

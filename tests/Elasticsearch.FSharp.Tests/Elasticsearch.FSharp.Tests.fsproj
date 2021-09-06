@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,9 +17,9 @@
         <Compile Include="Mapping.fs" />
         <Compile Include="Script.fs" />
         <Compile Include="Queries\ScriptQuery.fs" />
-      <Compile Include="Query.fs" />
-      <Compile Include="Sort.fs" />
-      <Compile Include="Search.fs" />
+        <Compile Include="Query.fs" />
+        <Compile Include="Sort.fs" />
+        <Compile Include="Search.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,7 +2,7 @@ module Elasticsearch.FSharp.DSL.Serialization.Queries.TermsQuery
 
 open Elasticsearch.FSharp.DSL
     
-let TermsQueryToJson ((name, termsBody) : string * (TermsQueryField list)) =     
+let termsQueryToJson ((name, termsBody) : string * (TermsQueryField list)) =     
     "{" + 
         (
             "\"" + name + "\":" + 

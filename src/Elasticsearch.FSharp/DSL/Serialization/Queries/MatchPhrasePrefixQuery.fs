@@ -1,7 +1,7 @@
 module Elasticsearch.FSharp.DSL.Serialization.Queries.MatchPhrasePrefixQuery
 open Elasticsearch.FSharp.DSL
 
-let MatchPhrasePrefixQueryToJson ((name, matchBody) : string * (MatchPhrasePrefixQueryField list)) =
+let matchPhrasePrefixQueryToJson ((name, matchBody) : string * (MatchPhrasePrefixQueryField list)) =
     "{" + 
         (
             "\"" + name + "\":{" + 

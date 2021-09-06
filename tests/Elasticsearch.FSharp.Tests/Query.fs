@@ -12,7 +12,7 @@ let ``"match_all" serializes correctly``() =
             Query MatchAll
         ]
     let expected = """{"query":{"match_all":{}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Test>]
@@ -22,7 +22,7 @@ let ``"match_none" serializes correctly``() =
             Query MatchNone
         ]
     let expected = """{"query":{"match_none":{}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Test>]
@@ -32,7 +32,7 @@ let ``"ids" serializes correctly``() =
             Query (IDs ["foo"; "bar"])
         ]
     let expected = """{"query":{"ids":{"values":["foo","bar"]}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Test>]
@@ -48,7 +48,7 @@ let ``"bool" serializes correctly``() =
             )
         ]
     let expected = """{"query":{"bool":{"must":[{"match_all":{}}]}}}"""
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -60,7 +60,7 @@ let ``"match" serializes correctly``(fieldName, fieldValue) =
             )
         ]
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s"}}}}""" fieldName fieldValue
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -72,7 +72,7 @@ let ``"term" serializes correctly``(fieldName, fieldValue) =
             )
         ]
     let expected = sprintf """{"query":{"term":{"%s":{"value":"%s"}}}}""" fieldName fieldValue
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -84,7 +84,7 @@ let ``"terms" serializes correctly``(fieldName, fieldValue) =
             )
         ]
     let expected = sprintf """{"query":{"terms":{"%s":["%s"]}}}""" fieldName fieldValue
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
   
 [<Property>]
@@ -96,7 +96,7 @@ let ``"range" serializes correctly``(fieldName, fieldValue) =
             )
         ]
     let expected = sprintf """{"query":{"range":{"%s":{"gte":"%s"}}}}""" fieldName fieldValue
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -108,7 +108,7 @@ let ``"script" serializes correctly``(scriptSource) =
             )
         ]
     let expected = sprintf """{"query":{"script":{"script":{"lang":"painless","source":"%s"}}}}""" scriptSource
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
     
 [<Property>]
@@ -128,7 +128,7 @@ let ``"multi_match" serializes correctly``(queryType, field, queryString, expans
             )
         ]
     let expected = sprintf """{"query":{"multi_match":{"type":"%s","fields":["%s"],"query":"%s","max_expansions":%d,"slop":%d,"tie_breaker":0.3}}}""" queryType field queryString expansions slop
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
 
 [<Property>]
@@ -146,7 +146,7 @@ let ``"match_phrase_prefix* serializes correctly`` (fieldName, fieldValue, expan
             )
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}""" fieldName fieldValue expansions
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)
 
 [<Property(MaxTest=10000)>]
@@ -158,7 +158,7 @@ let ``"exists" serialization works correctly``(fieldName) =
             )
         ]
     let expected = sprintf """{"query":{"exists":{"field":"%s"}}}""" fieldName
-    let actual = ToJson query
+    let actual = toJson query
     expected = actual
     
 [<Property(MaxTest=10000)>]
@@ -170,7 +170,7 @@ let ``"raw" serialization works correctly``(rawQuery) =
             )
         ]
     let expected = sprintf """{"query":{%s}}""" rawQuery
-    let actual = ToJson query
+    let actual = toJson query
     expected = actual
     
 [<Property>]
@@ -182,5 +182,5 @@ let ``"type" serializes correctly``(``type``) =
             )
         ]
     let expected = sprintf """{"query":{"type":{"value":"%s"}}}""" ``type``
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)

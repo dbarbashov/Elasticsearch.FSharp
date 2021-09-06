@@ -4,4 +4,4 @@ open Elasticsearch.FSharp.DSL.Serialization.Search
 
 [<AutoOpen>]
 module Interface = 
-    let ToJson = ElasticDSLToJson
+    let toJson = ElasticDSLToJson

@@ -28,5 +28,5 @@ let ``Sort serializes correctly``(fieldName, sortOrder, sortMode) =
         
     let expected =
         sprintf """{"sort":[{"%s":{"order":"%s","mode":"%s"}}],"query":{"match_all":{}}}""" fieldName orderStr modeStr
-    let actual = ToJson query
+    let actual = toJson query
     Assert.AreEqual(expected, actual)

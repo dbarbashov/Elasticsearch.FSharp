@@ -16,5 +16,5 @@ let ``"script" query serializes correctly`` scriptSource scriptLang =
             )
         ]
     let expected = sprintf """{"query":{"script":{"script":{"source":"%s","lang":"%s"}}}}""" scriptSource scriptLang
-    let actual = ToJson query
+    let actual = toJson query
     expected = actual

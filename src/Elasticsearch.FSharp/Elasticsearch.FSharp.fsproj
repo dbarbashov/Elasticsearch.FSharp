@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -39,7 +39,9 @@
     <Compile Include="DSL\Serialization\Aggs.fs" />
     <Compile Include="DSL\Serialization\Search.fs" />
     <Compile Include="DSL\Serialization\Interface.fs" />
-    <Compile Include="Mapping\ElasticMapping.fs" />
+    <Compile Include="Mapping\DSL.fs" />
+    <Compile Include="Mapping\Attributes.fs" />
+    <Compile Include="Mapping\Json.fs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,8 +12,8 @@ type QueryBody =
     | Script of ScriptQuery
     | MultiMatch of MultiMatchQuery
     | MatchPhrasePrefix of MatchPhrasePrefixQuery
-    | Exists of fieldName:string
-    | Raw of rawString:string
+    | Exists of FieldName: string
+    | Raw of RawString: string
     | TypeEquals of string
     
 and BoolQuery = 

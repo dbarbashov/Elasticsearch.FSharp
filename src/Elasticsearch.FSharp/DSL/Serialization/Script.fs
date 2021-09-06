@@ -2,7 +2,7 @@ module internal Elasticsearch.FSharp.DSL.Serialization.Script
 
 open Elasticsearch.FSharp.DSL
     
-let ScriptFieldsToJSON (scriptBody:ScriptField list) =
+let scriptFieldsToJson (scriptBody:ScriptField list) =
     ([
         for rangeParam in scriptBody ->
             match rangeParam with 
@@ -17,11 +17,11 @@ let ScriptFieldsToJSON (scriptBody:ScriptField list) =
                 "\"params\":{" + x + "}"
     ] |> String.concat ",") 
 
-let ScriptToJson ((name, scriptBody): ScriptFieldsBody) =
-    "\"" + name + "\":{\"script\":{" + (ScriptFieldsToJSON scriptBody) + "}}"
+let scriptToJson ((name, scriptBody): ScriptFieldsBody) =
+    "\"" + name + "\":{\"script\":{" + (scriptFieldsToJson scriptBody) + "}}"
     
-let ScriptFieldsBodyToJSON (fields: ScriptFieldsBody list) =
+let scriptFieldsBodyToJson (fields: ScriptFieldsBody list) =
     [
         for field in fields ->
-            ScriptToJson field
+            scriptToJson field
     ] |> String.concat ","

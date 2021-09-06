@@ -2,7 +2,7 @@ module Elasticsearch.FSharp.DSL.Serialization.Queries.RangeQuery
 
 open Elasticsearch.FSharp.DSL
     
-let RangeQueryToJson ((name, rangeBody): string * (RangeQueryField list) ) = 
+let rangeQueryToJson ((name, rangeBody): string * (RangeQueryField list) ) = 
     "{" + 
         (
             "\"" + name + "\":{" + 
