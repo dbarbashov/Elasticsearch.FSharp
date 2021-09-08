@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utility.fs" />
     <Compile Include="DSL\Script.fs" />
     <Compile Include="DSL\Queries\TermQuery.fs" />
     <Compile Include="DSL\Queries\TermsQuery.fs" />

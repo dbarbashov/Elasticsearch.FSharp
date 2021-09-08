@@ -58,7 +58,7 @@ let rec private getRealType (t: Type) : Type =
     else
         t
 
-let rec fieldToMapping (propAttr: ElasticField) : PropertyMapping =
+let fieldToMapping (propAttr: ElasticField) : PropertyMapping =
     { PropertyMapping.Default with 
         Type =
             if String.IsNullOrWhiteSpace propAttr.FieldType then

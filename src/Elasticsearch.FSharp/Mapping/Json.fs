@@ -1,83 +1,77 @@
 module Elasticsearch.FSharp.Mapping.Json
 
 open Elasticsearch.FSharp.Mapping.DSL
-
-let inline internal quoteString (s: string) = $"\"{s}\""
-let inline internal boolToString (b: bool) = if b then "true" else "false"
-let inline internal makeKeyValue (key: string) (value: string) = $"{quoteString key}:{value}"
-let inline internal makeObject innerParts =
-    let middle = innerParts |> String.concat ","
-    $"{{{middle}}}"
+open Elasticsearch.FSharp.Utility
 
 type MappingSetting with 
     member x.ToJson() =
         match x with
         | Setting value ->
-            quoteString (value.ToString())
+            Json.quoteString (value.ToString())
         | BoolSetting value ->
-            boolToString value
+            Json.boolToString value
 
 type PropertyMapping with
-    member x.ToJson() = makeObject [
+    member x.ToJson() = Json.makeObject [
         if not x.Enabled then 
-            yield makeKeyValue "enabled" (boolToString x.Enabled)
+            yield Json.makeKeyValue "enabled" (Json.boolToString x.Enabled)
         
         match x.Type with
-        | Some t -> yield makeKeyValue "type" (quoteString t)
+        | Some t -> yield Json.makeKeyValue "type" (Json.quoteString t)
         | None -> ()
         
         match x.Analyzer with
-        | Some a -> yield makeKeyValue "analyzer" (quoteString a)
+        | Some a -> yield Json.makeKeyValue "analyzer" (Json.quoteString a)
         | None -> ()
         
         match x.Format with
-        | Some f -> yield makeKeyValue "format" (quoteString f)
+        | Some f -> yield Json.makeKeyValue "format" (Json.quoteString f)
         | None -> ()
         
         match x.Properties with
         | Some props ->
-            yield makeKeyValue "properties" (makeObject [
+            yield Json.makeKeyValue "properties" (Json.makeObject [
                 for p in props do
-                    yield makeKeyValue p.Key (p.Value.ToJson())
+                    yield Json.makeKeyValue p.Key (p.Value.ToJson())
             ])
         | None -> ()
         
         match x.Fields with
         | Some fields ->
-            yield makeKeyValue "fields" (makeObject [
+            yield Json.makeKeyValue "fields" (Json.makeObject [
                 for f in fields do
-                    yield makeKeyValue f.Key (f.Value.ToJson())
+                    yield Json.makeKeyValue f.Key (f.Value.ToJson())
             ])
         | None -> ()
     ]
 
 type TypeMapping with
-    member x.ToJson() = makeObject [
+    member x.ToJson() = Json.makeObject [
         match x.AllEnabled with
         | Some true ->
             yield
-                makeKeyValue "_all" (makeObject [
-                    makeKeyValue "enabled" "true"
+                Json.makeKeyValue "_all" (Json.makeObject [
+                    Json.makeKeyValue "enabled" "true"
                 ])
         | _ -> ()
         
-        yield makeKeyValue "properties" (makeObject [
+        yield Json.makeKeyValue "properties" (Json.makeObject [
             for p in x.Properties do
-                yield makeKeyValue p.Key (p.Value.ToJson())
+                yield Json.makeKeyValue p.Key (p.Value.ToJson())
         ])
     ]
     
 type ElasticMapping with
-    member x.ToJson() = makeObject [
+    member x.ToJson() = Json.makeObject [
         match x.Settings with
         | Some settings -> 
-            yield makeKeyValue "settings" (makeObject [
+            yield Json.makeKeyValue "settings" (Json.makeObject [
                 for s in settings ->
-                    makeKeyValue s.Key (s.Value.ToJson())
+                    Json.makeKeyValue s.Key (s.Value.ToJson())
             ])
         | None -> ()
         
-        yield makeKeyValue "mappings" (makeObject [
-            makeKeyValue "_doc" (x.Mappings.ToJson())
+        yield Json.makeKeyValue "mappings" (Json.makeObject [
+            Json.makeKeyValue "_doc" (x.Mappings.ToJson())
         ])
     ]
