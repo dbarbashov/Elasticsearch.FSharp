@@ -22,10 +22,9 @@ type SearchBody with
                     ]
             ])
         | ScriptFields fields -> 
-            let body = Script.scriptFieldsBodyToJson fields
-            Json.makeKeyValue "script_fields" $"{{{body}}}"
+            Json.makeKeyValue "script_fields" (Script.scriptFieldsBodyToJson fields)
         | Aggs fields -> 
-            let body = Aggs.AggsBodyToJSON fields
+            let body = Aggs.aggsBodyToJson fields
             Json.makeKeyValue "aggs" $"{{{body}}}"
         | From x -> 
             Json.makeKeyValue "from" (x.ToString())

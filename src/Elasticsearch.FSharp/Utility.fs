@@ -11,3 +11,6 @@ module Json =
     let inline makeArray innerParts = 
         let middle = innerParts |> String.concat ","
         $"[{middle}]"
+    let inline makeQuotedArray strings =
+        strings
+        |> (Seq.map quoteString >> makeArray)
