@@ -23,7 +23,7 @@ let ``Type serializes correctly``() =
     let mapping = generateElasticMapping typeof<TestEntity>
     let mappingJson = mapping.ToJson()
     let expected =
-        Regex.Replace(
+        Helpers.removeWhitespace
             """{
                 "mappings": {
                     "_doc": {
@@ -42,10 +42,7 @@ let ``Type serializes correctly``() =
                         }
                     }
                 }
-            }""",
-            "\s*",
-            ""
-        )
+            }"""
     let actual = mappingJson
     printf "%s" mappingJson
     Assert.AreEqual(expected, actual)
@@ -67,7 +64,7 @@ let ``Recursive type serializes correctly``() =
     let mapping = generateElasticMapping typeof<Elastic_Message>
     let mappingJson = mapping.ToJson()
     let expected =
-        Regex.Replace(
+        Helpers.removeWhitespace
             """{
                 "mappings": {
                     "_doc": {
@@ -111,9 +108,7 @@ let ``Recursive type serializes correctly``() =
                         }
                     }
                 }
-            }""",
-            "\s*",
-            "")
+            }"""
     let actual = mappingJson
     printf "%s" mappingJson
     Assert.AreEqual(expected, actual)
