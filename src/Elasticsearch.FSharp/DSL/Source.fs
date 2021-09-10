@@ -7,4 +7,4 @@ type SourceBody =
     | Nothing
     | Only of string
     | List of string list
-    | Pattern of includes:Includes * excludes:Excludes
+    | Pattern of Includes: Includes * Excludes: Excludes

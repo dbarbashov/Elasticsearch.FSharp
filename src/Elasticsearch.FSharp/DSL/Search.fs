@@ -11,4 +11,4 @@ and SearchBody =
     | From of int
     | Size of int
     | Source_ of SourceBody
-    | Raw of key:string * value:string
+    | Raw of Key: string * Value: string

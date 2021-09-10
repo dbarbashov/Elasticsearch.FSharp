@@ -2,71 +2,73 @@ module internal rec Elasticsearch.FSharp.DSL.Serialization.Query
 
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization.Queries
+open Elasticsearch.FSharp.Utility
 
-let BoolQueryToJson boolQueryBody = 
-    "{" + 
-        ([
-            for boolPart in boolQueryBody ->
-                 match boolPart with 
-                 | Must queryBody ->
-                    let body = QueryBodyListToJsonBool queryBody 
-                    "\"must\":" + body
-                 | Filter queryBody ->
-                    let body = QueryBodyListToJsonBool queryBody 
-                    "\"filter\":" + body
-                 | Should queryBody ->
-                    let body = QueryBodyListToJsonBool queryBody 
-                    "\"should\":" + body
-                 | MustNot queryBody ->
-                    let body = QueryBodyListToJsonBool queryBody 
-                    "\"must_not\":" + body
-                 | MinimumShouldMatch x -> 
-                    "\"minimum_should_match\":\"" + x.ToString() + "\""
-        ] |> String.concat ",")
-    + "}"
+type BoolQuery with
+    member x.ToJson() =
+        match x with 
+        | Must queryBody ->
+            Json.makeKeyValue "must" (queryBodyListToJsonBool queryBody) 
+        | Filter queryBody ->
+            Json.makeKeyValue "filter" (queryBodyListToJsonBool queryBody) 
+        | Should queryBody ->
+            Json.makeKeyValue "should" (queryBodyListToJsonBool queryBody) 
+        | MustNot queryBody ->
+            Json.makeKeyValue "must_not" (queryBodyListToJsonBool queryBody) 
+        | MinimumShouldMatch x ->
+            Json.makeKeyValue "minimum_should_match" (Json.quoteString (x.ToString()))
+
+let boolQueryToJson (boolQueryBody: BoolQuery seq) =
+    Json.makeObject [
+        for boolPart in boolQueryBody ->
+            boolPart.ToJson()
+    ]
     
-let QueryBodyToJson (queryPart: QueryBody) =
-    "{" + 
-        match queryPart with 
-        | MatchAll -> 
-            "\"match_all\":{}"
+type QueryBody with
+    member x.ToJson() =
+        match x with 
+        | MatchAll ->
+            Json.makeKeyValue "match_all" (Json.makeObject [])
         | MatchNone ->
-            "\"match_none\":{}"
+            Json.makeKeyValue "match_none" (Json.makeObject [])
         | IDs ids ->
-            "\"ids\":" + "{\"values\":[" + (ids |> List.map (fun x -> "\"" + x + "\"") |> String.concat ",") + "]}"
+            Json.makeKeyValue "ids" (Json.makeObject [
+                Json.makeKeyValue "values" (Json.makeQuotedArray ids)
+            ])
         | Bool boolQuery ->
-            let body = BoolQueryToJson boolQuery
-            "\"bool\":" + body
+            Json.makeKeyValue "bool" (boolQueryToJson boolQuery)
         | Match matchQuery ->
-            let body = MatchQuery.MatchQueryToJson matchQuery 
-            "\"match\":" + body
+            Json.makeKeyValue "match" (MatchQuery.matchQueryToJson matchQuery)
         | Term termQuery -> 
-            let body = TermQuery.TermQueryToJson termQuery
-            "\"term\":" + body
+            Json.makeKeyValue "term" (TermQuery.termQueryToJson termQuery)
         | Terms termsQuery ->
-            let body = TermsQuery.TermsQueryToJson termsQuery
-            "\"terms\":" + body
+            Json.makeKeyValue "terms" (TermsQuery.termsQueryToJson termsQuery)
         | Range rangeQuery ->
-            let body = RangeQuery.RangeQueryToJson rangeQuery 
-            "\"range\":" + body
+            Json.makeKeyValue "range" (RangeQuery.rangeQueryToJson rangeQuery)
         | Script scriptQuery -> 
-            let body = ScriptQuery.ScriptQueryToJson scriptQuery
-            "\"script\":" + body
+            Json.makeKeyValue "script" (ScriptQuery.scriptQueryToJson scriptQuery)
         | MultiMatch multimatchBody ->
-            let body = MultiMatchQuery.MultimatchBodyToJson multimatchBody
-            "\"multi_match\":" + body
+            Json.makeKeyValue "multi_match" (MultiMatchQuery.multimatchBodyToJson multimatchBody)
         | MatchPhrasePrefix matchPhrasePrefixBody ->
-            let body = MatchPhrasePrefixQuery.MatchPhrasePrefixQueryToJson matchPhrasePrefixBody
-            "\"match_phrase_prefix\":" + body
+            Json.makeKeyValue "match_phrase_prefix" (MatchPhrasePrefixQuery.matchPhrasePrefixQueryToJson matchPhrasePrefixBody)
         | Exists field ->
-            "\"exists\":{\"field\":\"" + field + "\"}"
+            Json.makeKeyValue "exists" (Json.makeObject [
+                Json.makeKeyValue "field" (Json.quoteString field)
+            ])
         | TypeEquals t ->
-            "\"type\":{\"value\":\"" + t + "\"}"
+            Json.makeKeyValue "type" (Json.makeObject [
+                Json.makeKeyValue "value" (Json.quoteString t)
+            ])
         | QueryBody.Raw body ->
             body
-    + "}"
     
-let QueryBodyListToJsonList = List.map QueryBodyToJson  
+let queryBodyToJson (queryPart: QueryBody) =
+    Json.makeObject [
+        queryPart.ToJson()
+    ]
 
-let QueryBodyListToJsonBool (queryBody: QueryBody list) = 
-    "[" + ( QueryBodyListToJsonList queryBody |> String.concat "," ) + "]"
+let queryBodyListToJsonBool (queryBody: QueryBody list) =
+    Json.makeArray [
+        for body in queryBody ->
+            queryBodyToJson body
+    ]
