@@ -1,6 +1,8 @@
 # Elasticsearch.FSharp
 
 Compose type-checked ElasticSearch queries with the power of F# language.
+
+![Github Actions Badge](https://github.com/dbarbashov/Elasticsearch.FSharp/actions/workflows/build-and-test.yml/badge.svg)
 ## Example
 
 F# query:

@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DC92765B-25F4-41AB-A282-282B5399ACCA}"
 	ProjectSection(SolutionItems) = preProject
 												.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elasticsearch.FSharp", "src\Elasticsearch.FSharp\Elasticsearch.FSharp.fsproj", "{69E3270B-8AC7-433A-83F7-D6C3505C5C87}"
