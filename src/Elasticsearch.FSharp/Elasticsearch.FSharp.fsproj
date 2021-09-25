@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <PackageId>Elasticsearch.FSharp</PackageId>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
     <Authors>lkmfwe and contributors</Authors>
     <Company>No company</Company>
   </PropertyGroup>
@@ -43,9 +43,6 @@
     <Compile Include="Mapping\DSL.fs" />
     <Compile Include="Mapping\Attributes.fs" />
     <Compile Include="Mapping\Json.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
   </ItemGroup>
 
 </Project>
