@@ -29,7 +29,7 @@ let ``"match_none" serializes correctly``() =
 let ``"ids" serializes correctly``() =
     let query =
         Search [
-            Query (IDs ["foo"; "bar"])
+            Query (Ids ["foo"; "bar"])
         ]
     let expected = """{"query":{"ids":{"values":["foo","bar"]}}}"""
     let actual = toJson query

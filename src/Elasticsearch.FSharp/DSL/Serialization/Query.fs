@@ -31,7 +31,7 @@ type QueryBody with
             Json.makeKeyValue "match_all" (Json.makeObject [])
         | MatchNone ->
             Json.makeKeyValue "match_none" (Json.makeObject [])
-        | IDs ids ->
+        | Ids ids ->
             Json.makeKeyValue "ids" (Json.makeObject [
                 Json.makeKeyValue "values" (Json.makeQuotedArray ids)
             ])

@@ -3,7 +3,7 @@ namespace Elasticsearch.FSharp.DSL
 type QueryBody = 
     | MatchAll
     | MatchNone
-    | IDs of string list
+    | Ids of string list
     | Bool of BoolQuery list 
     | Match of MatchQuery
     | Term of TermQuery
