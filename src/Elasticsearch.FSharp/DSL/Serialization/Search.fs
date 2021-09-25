@@ -25,7 +25,7 @@ type SearchBody with
             Json.makeKeyValue "script_fields" (Script.scriptFieldsBodyToJson fields)
         | Aggs fields -> 
             let body = Aggs.aggsBodyToJson fields
-            Json.makeKeyValue "aggs" $"{{{body}}}"
+            Json.makeKeyValue "aggs" body
         | From x -> 
             Json.makeKeyValue "from" (x.ToString())
         | Size x -> 
