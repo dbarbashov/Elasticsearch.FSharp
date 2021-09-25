@@ -10,6 +10,9 @@
     <Authors>dbarbashov and contributors</Authors>
     <Company>No company</Company>
     <PackageTags>fsharp elastic elasticsearch</PackageTags>
+    <Description>Compose type-checked ElasticSearch queries with the power of F# language</Description>
+    <RepositoryUrl>https://github.com/dbarbashov/Elasticsearch.FSharp</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/dbarbashov/Elasticsearch.FSharp/blob/master/LICENSE.md</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
