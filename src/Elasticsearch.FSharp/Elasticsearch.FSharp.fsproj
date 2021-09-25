@@ -5,10 +5,11 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <PackageId>Elasticsearch.FSharp</PackageId>
+    <PackageId>dbarbashov.Elasticsearch.FSharp</PackageId>
     <Version>1.4.0</Version>
-    <Authors>lkmfwe and contributors</Authors>
+    <Authors>dbarbashov and contributors</Authors>
     <Company>No company</Company>
+    <PackageTags>fsharp elastic elasticsearch</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
