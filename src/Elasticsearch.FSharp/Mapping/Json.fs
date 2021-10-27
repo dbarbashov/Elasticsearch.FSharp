@@ -62,7 +62,9 @@ type TypeMapping with
     ]
     
 type ElasticMapping with
-    member x.ToJson() = Json.makeObject [
+    member x.ToJson(?includeTypeName) = Json.makeObject [
+        let includeTypeName = Option.defaultValue true includeTypeName
+        
         match x.Settings with
         | Some settings -> 
             yield Json.makeKeyValue "settings" (Json.makeObject [
@@ -71,7 +73,19 @@ type ElasticMapping with
             ])
         | None -> ()
         
-        yield Json.makeKeyValue "mappings" (Json.makeObject [
-            Json.makeKeyValue "_doc" (x.Mappings.ToJson())
-        ])
+        if includeTypeName then 
+            yield Json.makeKeyValue "mappings" (Json.makeObject [
+                Json.makeKeyValue "_doc" (x.Mappings.ToJson())
+            ])
+        else
+            yield Json.makeKeyValue "mappings" (x.Mappings.ToJson())
     ]
+    
+    member x.ToPutMappingsJson() = [|
+        for kv in x.Mappings.Properties do
+            yield Json.makeObject [
+                Json.makeKeyValue "properties" (Json.makeObject [
+                    Json.makeKeyValue kv.Key (kv.Value.ToJson())
+                ])
+            ]
+    |]

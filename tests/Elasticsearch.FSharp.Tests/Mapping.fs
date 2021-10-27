@@ -44,8 +44,46 @@ let ``Type serializes correctly``() =
                 }
             }"""
     let actual = mappingJson
-    printf "%s" mappingJson
     Assert.AreEqual(expected, actual)
+    
+[<Test>]
+let ``Type serializes correctly with excluded type name``() =
+    let mapping = generateElasticMapping typeof<TestEntity>
+    let mappingJson = mapping.ToJson(includeTypeName=false)
+    let expected =
+        Helpers.removeWhitespace
+            """{
+                "mappings": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "title": {
+                            "type": "text",
+                            "fields": {
+                                "raw": { "type":"keyword" },
+                                "en": { "type":"text", "analyzer":"english" },
+                                "ru": { "type":"text", "analyzer":"russian" }
+                            }
+                        }
+                    }
+                }
+            }"""
+    let actual = mappingJson
+    Assert.AreEqual(expected, actual)
+    
+[<Test>]
+let ``Type serializes correctly to put mappings json``() =
+    let mapping = generateElasticMapping typeof<TestEntity>
+    let mappingJson = mapping.ToPutMappingsJson()
+    let expected =
+        [|
+            """{"properties":{"id": { "type": "long" }}}"""
+            """{"properties":{"title": { "type": "text", "fields": { "raw": { "type":"keyword" }, "en": { "type":"text", "analyzer":"english" }, "ru": { "type":"text", "analyzer":"russian" } } }}}"""
+        |]
+        |> Array.map Helpers.removeWhitespace
+    let actual = mappingJson
+    CollectionAssert.AreEquivalent(expected, actual)
     
 [<ElasticType("message")>]
 type Elastic_Message = {
