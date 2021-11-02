@@ -2,7 +2,9 @@
 
 Compose type-checked ElasticSearch queries with the power of F# language.
 
+![Nuget Version](https://img.shields.io/nuget/v/dbarbashov.Elasticsearch.FSharp)
 ![Github Actions Badge](https://github.com/dbarbashov/Elasticsearch.FSharp/actions/workflows/build-and-test.yml/badge.svg)
+
 ## Example
 
 F# query:
