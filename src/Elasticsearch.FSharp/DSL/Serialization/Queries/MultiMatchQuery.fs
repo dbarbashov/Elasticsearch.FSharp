@@ -16,7 +16,7 @@ type MultiMatchQueryField with
             Json.makeKeyValue "query" (Json.quoteString query)
         | MultiMatchQueryField.MaxExpansions cnt ->
             Json.makeKeyValue "max_expansions" (cnt.ToString())
-        | Slop cnt ->
+        | MultiMatchQueryField.Slop cnt ->
             Json.makeKeyValue "slop" (cnt.ToString())
         | TieBreaker tie ->
             Json.makeKeyValue "tie_breaker" (tie.ToString())
