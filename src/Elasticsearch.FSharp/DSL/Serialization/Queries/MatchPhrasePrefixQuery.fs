@@ -11,6 +11,10 @@ type MatchPhrasePrefixQueryField with
             Json.makeKeyValue "query" (Json.quoteString x)
         | MatchPhrasePrefixQueryField.MaxExpansions x ->
             Json.makeKeyValue "max_expansions" (x.ToString())
+        | MatchPhrasePrefixQueryField.Slop x ->
+            Json.makeKeyValue "slop" (x.ToString())
+        | MatchPhrasePrefixQueryField.Analyzer x ->
+            Json.makeKeyValue "analyzer" x
 
 let matchPhrasePrefixQueryToJson ((name, matchBody) : string * (MatchPhrasePrefixQueryField list)) =
     Json.makeObject [

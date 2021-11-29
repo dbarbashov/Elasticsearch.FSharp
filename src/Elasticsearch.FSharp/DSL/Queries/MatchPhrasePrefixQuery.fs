@@ -4,4 +4,6 @@ type MatchPhrasePrefixQuery = string * (MatchPhrasePrefixQueryField list)
 
 and MatchPhrasePrefixQueryField =
     | MatchQuery of string
-    | MaxExpansions of int32
+    | MaxExpansions of int
+    | Slop of int
+    | Analyzer of string
