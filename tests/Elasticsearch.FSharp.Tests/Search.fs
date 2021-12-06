@@ -32,15 +32,15 @@ let ``Sort serializes correctly``() =
 let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldName2, paramName, paramValue) =
     let query =
         Search [
-            ScriptFields [
+            SearchBody.ScriptFields [
                 fieldName1, [
-                    Lang "painless"
-                    Source script1
+                    ScriptField.Lang "painless"
+                    ScriptField.Source script1
                 ]
                 fieldName2, [
-                    Lang "painless"
-                    Source script2
-                    Params [
+                    ScriptField.Lang "painless"
+                    ScriptField.Source script2
+                    ScriptField.Params [
                         paramName, paramValue
                     ]
                 ]
@@ -53,6 +53,28 @@ let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldNam
             script1
             fieldName2
             script2
+            paramName
+            paramValue
+            
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
+    
+[<Property(MaxTest=10000)>]
+let ``Script serializes correctly``(script1, paramName, paramValue) =
+    let query =
+        Search [
+            SearchBody.Script [                
+                Script.Lang "painless"
+                Script.Source script1
+                Script.Params [
+                    paramName, paramValue
+                ]
+            ]
+        ]
+    let expected =
+        sprintf
+            """{"script":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}"""
+            script1
             paramName
             paramValue
             

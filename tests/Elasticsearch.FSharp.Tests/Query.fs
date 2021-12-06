@@ -104,7 +104,7 @@ let ``"script" serializes correctly``(scriptSource) =
     let query =
         Search [
             Query (
-                Script [Lang "painless"; Source scriptSource]
+                ScriptFields [ScriptField.Lang "painless"; ScriptField.Source scriptSource]
             )
         ]
     let expected = sprintf """{"query":{"script":{"script":{"lang":"painless","source":"%s"}}}}""" scriptSource
