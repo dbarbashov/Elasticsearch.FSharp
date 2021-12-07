@@ -5,4 +5,4 @@ open Elasticsearch.FSharp.DSL.Serialization.Script
 open Elasticsearch.FSharp.Utility
     
 let scriptQueryToJson (scriptBody: ScriptBody) =
-    scriptToJson scriptBody
+    Json.makeObject [ scriptToJson scriptBody ]

@@ -17,8 +17,7 @@ type Script with
             ])
     
 let scriptToJson (scriptBody: ScriptBody) =
-    // elastic goes like: "script": { "script": { ... } }
-    Json.makeObject [ Json.makeKeyValue "script" (Json.makeObject [
+    Json.makeKeyValue "script" (Json.makeObject [
         for rangeParam in scriptBody ->
             rangeParam.ToJson()
-    ]) ]
+    ])

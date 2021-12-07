@@ -63,17 +63,24 @@ let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldNam
 let ``Script serializes correctly``(script1, paramName, paramValue) =
     let query =
         Search [
-            SearchBody.Script [                
-                Script.Lang "painless"
-                Script.Source script1
-                Script.Params [
-                    paramName, paramValue
+            Query (
+                Bool [
+                    Filter [
+                        Script [
+                            Script.Lang "painless"
+                            Script.Source script1
+                            Script.Params [
+                                paramName, paramValue
+                            ]
+                        ]
+                   ]
                 ]
-            ]
+            )
         ]
+
     let expected =
         sprintf
-            """{"script":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}"""
+            """{"query":{"bool":{"filter":[{"script":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}]}}}"""
             script1
             paramName
             paramValue

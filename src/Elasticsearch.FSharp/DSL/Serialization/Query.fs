@@ -44,10 +44,8 @@ type QueryBody with
         | Terms termsQuery ->
             Json.makeKeyValue "terms" (TermsQuery.termsQueryToJson termsQuery)
         | Range rangeQuery ->
-            Json.makeKeyValue "range" (RangeQuery.rangeQueryToJson rangeQuery)
-        | QueryBody.ScriptFields scriptFieldsQuery -> 
-            Json.makeKeyValue "script" (ScriptFieldsQuery.scriptQueryToJson scriptFieldsQuery)
-        | QueryBody.Script scriptQuery -> 
+            Json.makeKeyValue "range" (RangeQuery.rangeQueryToJson rangeQuery)        
+        | QueryBody.Script scriptQuery ->
             Json.makeKeyValue "script" (ScriptQuery.scriptQueryToJson scriptQuery)
         | MultiMatch multimatchBody ->
             Json.makeKeyValue "multi_match" (MultiMatchQuery.multimatchBodyToJson multimatchBody)

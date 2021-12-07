@@ -24,8 +24,8 @@ type SearchBody with
         | ScriptFields fields -> 
             Json.makeKeyValue "script_fields" (ScriptField.scriptFieldsBodyToJson fields)
         | Script script ->
-            Json.makeKeyValue "script" (Script.scriptToJson script)
-        | Aggs fields -> 
+            Script.scriptToJson script
+        | Aggs fields ->
             let body = Aggs.aggsBodyToJson fields
             Json.makeKeyValue "aggs" body
         | From x -> 

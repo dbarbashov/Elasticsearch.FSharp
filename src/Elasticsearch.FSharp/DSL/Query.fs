@@ -10,7 +10,6 @@ type QueryBody =
     | Terms of TermsQuery
     | Range of RangeQuery
     | Script of ScriptBody
-    | ScriptFields of ScriptFieldsQuery
     | MultiMatch of MultiMatchQuery
     | MatchPhrasePrefix of MatchPhrasePrefixQuery
     | Exists of FieldName: string
