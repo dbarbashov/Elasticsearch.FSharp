@@ -100,14 +100,15 @@ let ``"range" serializes correctly``(fieldName, fieldValue) =
     Assert.AreEqual(expected, actual)
     
 [<Property>]
-let ``"script" serializes correctly``(scriptSource) = 
+let ``"script" serializes correctly`` scriptName scriptSource =
     let query =
         Search [
-            Query (
-                Script [Lang "painless"; Source scriptSource]
-            )
+            Query MatchAll
+            ScriptFields [
+                scriptName, [ ScriptField.Lang "painless"; ScriptField.Source scriptSource ]
+            ]
         ]
-    let expected = sprintf """{"query":{"script":{"script":{"lang":"painless","source":"%s"}}}}""" scriptSource
+    let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}}}}""" scriptName scriptSource
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     

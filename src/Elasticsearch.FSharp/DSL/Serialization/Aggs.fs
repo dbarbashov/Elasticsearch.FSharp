@@ -22,7 +22,7 @@ type AggParam with
     member x.ToJson() =
         match x with
         | AggScript scriptBody ->
-            Json.makeKeyValue "script" (Script.scriptFieldsToJson scriptBody)
+            Json.makeKeyValue "script" (ScriptField.scriptFieldsToJson scriptBody)
         | AggValue value ->
             Json.makeKeyValue "value" (Json.quoteString value)
         | AggField field ->

@@ -24,12 +24,12 @@
     <Compile Include="DSL\Queries\MultiMatchQuery.fs" />
     <Compile Include="DSL\Queries\MatchPhrasePrefixQuery.fs" />
     <Compile Include="DSL\Queries\RangeQuery.fs" />
-    <Compile Include="DSL\Queries\ScriptQuery.fs" />
     <Compile Include="DSL\Query.fs" />
     <Compile Include="DSL\Sort.fs" />
     <Compile Include="DSL\Source.fs" />
     <Compile Include="DSL\Aggs.fs" />
     <Compile Include="DSL\Search.fs" />
+    <Compile Include="DSL\Serialization\ScriptField.fs" />
     <Compile Include="DSL\Serialization\Script.fs" />
     <Compile Include="DSL\Serialization\Queries\TermQuery.fs" />
     <Compile Include="DSL\Serialization\Queries\TermsQuery.fs" />
