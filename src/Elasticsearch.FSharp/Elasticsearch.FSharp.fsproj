@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <PackageId>dbarbashov.Elasticsearch.FSharp</PackageId>
-    <Version>1.4.2</Version>
+    <Version>1.5.0</Version>
     <Authors>dbarbashov and contributors</Authors>
     <Company>No company</Company>
     <PackageTags>fsharp elastic elasticsearch</PackageTags>

@@ -4,3 +4,4 @@ packages/
 bin/
 obj/
 *.DotSettings*
+.DS_Store
