@@ -63,25 +63,38 @@ type AggBody with
         | AggDateHistogram aggParams ->
             Json.makeKeyValue "date_histogram" (aggParamsToJson aggParams)
 
-let aggBodyToJson ((name, body): (string * AggBody)) =
+let complexAggsBodyToJson (complexAggs: AggsFieldsBody list) =
+    Json.makeKeyValue "aggs" (Json.makeObject [
+        for complexAgg in complexAggs ->
+            complexAgg.ToJson()
+    ])
+
+let aggBodyToJson ((name, body): (string * AggBody)) (complexAggs: AggsFieldsBody list) =
     Json.makeKeyValue name (Json.makeObject [
         body.ToJson()
+        if List.tryHead complexAggs <> None then
+            complexAggsBodyToJson complexAggs
     ])
 
 type AggsFieldsBody with
     member x.ToJson() =
         match x with
         | NamedAgg (name, agg) -> 
-            aggBodyToJson (name, agg)
-        | MoreAggs aggs ->
-            Json.makeKeyValue "aggs" (Json.makeObject [
-                aggsBodyToJson aggs
-            ])
+            aggBodyToJson (name, agg) []
         | FilterAgg (name, query, agg) ->
             Json.makeKeyValue name (Json.makeObject [
                 Json.makeKeyValue "filter" (Query.queryBodyToJson query)
                 Json.makeKeyValue "aggs" (Json.makeObject [
-                    aggBodyToJson (name, agg)
+                    aggBodyToJson (name, agg) []
+                ])
+            ])
+        | NamedComplexAgg (name, agg, complexAggs) ->
+            aggBodyToJson (name, agg) complexAggs
+        | FilterComplexAgg (name, query, agg, complexAggs) ->
+            Json.makeKeyValue name (Json.makeObject [
+                Json.makeKeyValue "filter" (Query.queryBodyToJson query)
+                Json.makeKeyValue "aggs" (Json.makeObject [
+                    aggBodyToJson (name, agg) complexAggs
                 ])
             ])
 
