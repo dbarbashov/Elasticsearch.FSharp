@@ -2,8 +2,9 @@ namespace Elasticsearch.FSharp.DSL
 
 type AggsFieldsBody = 
     | NamedAgg of string * AggBody
-    | MoreAggs of AggsFieldsBody list
+    | NamedComplexAgg of string * AggBody * AggsFieldsBody list
     | FilterAgg of string * QueryBody * AggBody
+    | FilterComplexAgg of string * QueryBody * AggBody * AggsFieldsBody list
 
 and AggWeightConfig = 
     | WeightField of string
@@ -11,7 +12,7 @@ and AggWeightConfig =
     | Weight of string
 
 and AggParam = 
-    | AggScript of (ScriptField list)
+    | AggScript of ScriptField list
     | AggValue of string
     | AggField of string 
     | AggWeight of AggWeightConfig

@@ -121,6 +121,36 @@ let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) 
                        aggName aggValueField aggFieldName
     let actual = toJson query
     Assert.AreEqual(expected, actual)
+
+[<Property(MaxTest=10000)>]
+let ``Complex aggs serializes correctly``(complexAggName, complexAggFieldName,
+                                         complexFilterAggName, complexFilterAggField,
+                                         simpleAggName, simpleAggField) =
+    let query =
+        Search [
+            Aggs [
+                NamedComplexAgg (
+                    complexAggName,
+                    Avg [ AggField complexAggFieldName],
+                    [
+                        FilterComplexAgg (
+                            complexFilterAggName,
+                            MatchAll,
+                            Avg [ AggField complexFilterAggField ],
+                            [
+                                NamedAgg (
+                                    simpleAggName, Avg [ AggField simpleAggField ]
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ]
+        ]
+    let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"},"aggs":{"%s":{"filter":{"match_all":{}},"aggs":{"%s":{"avg":{"field":"%s"},"aggs":{"%s":{"avg":{"field":"%s"}}}}}}}}}}"""
+                       complexAggName complexAggFieldName complexFilterAggName complexFilterAggName complexFilterAggField simpleAggName simpleAggField
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
     
 [<Property>]
 let ``From serializes correctly``(from) =
