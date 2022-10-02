@@ -185,3 +185,15 @@ let ``"type" serializes correctly``(``type``) =
     let expected = sprintf """{"query":{"type":{"value":"%s"}}}""" ``type``
     let actual = toJson query
     Assert.AreEqual(expected, actual)
+
+[<Property>]
+let ``"wildcard" serializes correctly``(fieldName, patternValue) =
+    let query =
+        Search [
+            Query (
+                Wildcard (fieldName, [PatternValue patternValue])
+            )
+        ]
+    let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s"}}}}""" fieldName patternValue
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
