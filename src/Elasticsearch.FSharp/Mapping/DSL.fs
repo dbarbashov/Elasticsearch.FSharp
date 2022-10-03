@@ -10,6 +10,7 @@ type PropertyMapping = {
     Type: string option
     Analyzer: string option
     Enabled: bool
+    IgnoreMalformed: bool
     Format: string option
     Properties: Dictionary<string, PropertyMapping> option
     Fields: Dictionary<string, PropertyMapping> option
@@ -19,6 +20,7 @@ with
         Type = None
         Analyzer = None
         Enabled = true
+        IgnoreMalformed = false
         Format = None
         Properties = None
         Fields = None

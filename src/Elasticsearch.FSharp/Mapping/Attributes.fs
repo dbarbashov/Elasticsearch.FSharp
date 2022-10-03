@@ -21,12 +21,14 @@ type ElasticField([<Optional; DefaultParameterValue(null:string)>] fieldType:str
                   [<Optional; DefaultParameterValue(true)>] enabled:bool,
                   [<Optional; DefaultParameterValue(null:string)>] format:string,
                   [<Optional; DefaultParameterValue(false)>] useProperties:bool,
-                  [<Optional; DefaultParameterValue(10)>] maxDepth:int) =
+                  [<Optional; DefaultParameterValue(10)>] maxDepth:int,
+                  [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool) =
     inherit Attribute()
     
     member val FieldType = fieldType with get
     member val Analyzer = analyzer with get
-    member val Enabled = enabled with get 
+    member val Enabled = enabled with get
+    member val IgnoreMalformed = ignoreMalformed with get
     member val Format = format with get
     member val UseProperties = useProperties with get
     member val MaxDepth = maxDepth with get
@@ -39,8 +41,9 @@ type ElasticSubField(fieldName: string,
                      [<Optional; DefaultParameterValue(true)>] enabled:bool,
                      [<Optional; DefaultParameterValue(null:string)>] format:string,
                      [<Optional; DefaultParameterValue(false)>] useProperties:bool,
-                     [<Optional; DefaultParameterValue(10)>] maxDepth:int) =
-    inherit ElasticField(fieldType, analyzer, enabled, format, useProperties, maxDepth)
+                     [<Optional; DefaultParameterValue(10)>] maxDepth:int,
+                     [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool) =
+    inherit ElasticField(fieldType, analyzer, enabled, format, useProperties, maxDepth, ignoreMalformed)
     
     member val FieldName = fieldName with get
     
@@ -76,6 +79,7 @@ let fieldToMapping (propAttr: ElasticField) : PropertyMapping =
             else
                 Some propAttr.Format
         Enabled = propAttr.Enabled
+        IgnoreMalformed = propAttr.IgnoreMalformed
     }
     
 let rec private getTypePropertyMappings (t: Type) (depth: int) : Dictionary<string, PropertyMapping> =
