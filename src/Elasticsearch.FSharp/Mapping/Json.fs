@@ -15,6 +15,9 @@ type PropertyMapping with
     member x.ToJson() = Json.makeObject [
         if not x.Enabled then 
             yield Json.makeKeyValue "enabled" (Json.boolToString x.Enabled)
+            
+        if x.IgnoreMalformed then
+            yield Json.makeKeyValue "ignore_malformed" (Json.boolToString x.IgnoreMalformed)
         
         match x.Type with
         | Some t -> yield Json.makeKeyValue "type" (Json.quoteString t)

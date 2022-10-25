@@ -15,6 +15,7 @@ type TestEntity = {
     
     [<ElasticField("text")>]
     [<ElasticSubField("raw", fieldType = "keyword")>]
+    [<ElasticSubField("integer", fieldType = "integer", ignoreMalformed=true)>]
     [<ElasticSubField("en", fieldType = "text", analyzer = "english")>]
     [<ElasticSubField("ru", fieldType = "text", analyzer = "russian")>]
     title: string
@@ -37,6 +38,7 @@ let ``Type serializes correctly``() =
                                 "type": "text",
                                 "fields": {
                                     "raw": { "type":"keyword" },
+                                    "integer": { "ignore_malformed":true, "type":"integer" },
                                     "en": { "type":"text", "analyzer":"english" },
                                     "ru": { "type":"text", "analyzer":"russian" }
                                 }
@@ -64,6 +66,7 @@ let ``Type serializes correctly with excluded type name``() =
                             "type": "text",
                             "fields": {
                                 "raw": { "type":"keyword" },
+                                "integer": { "ignore_malformed":true, "type":"integer" },
                                 "en": { "type":"text", "analyzer":"english" },
                                 "ru": { "type":"text", "analyzer":"russian" }
                             }
@@ -105,6 +108,7 @@ let ``Type serializes correctly with settings``() =
                             "type": "text",
                             "fields": {
                                 "raw": { "type":"keyword" },
+                                "integer": { "ignore_malformed":true, "type":"integer" },
                                 "en": { "type":"text", "analyzer":"english" },
                                 "ru": { "type":"text", "analyzer":"russian" }
                             }
@@ -122,7 +126,7 @@ let ``Type serializes correctly to put mappings json``() =
     let expected =
         [|
             """{"properties":{"id": { "type": "long" }}}"""
-            """{"properties":{"title": { "type": "text", "fields": { "raw": { "type":"keyword" }, "en": { "type":"text", "analyzer":"english" }, "ru": { "type":"text", "analyzer":"russian" } } }}}"""
+            """{"properties":{"title": { "type": "text", "fields": { "raw": { "type":"keyword" }, "integer": { "ignore_malformed":true, "type":"integer" }, "en": { "type":"text", "analyzer":"english" }, "ru": { "type":"text", "analyzer":"russian" } } }}}"""
         |]
         |> Array.map Helpers.removeWhitespace
     let actual = mappingJson
@@ -132,6 +136,7 @@ let ``Type serializes correctly to put mappings json``() =
 type Elastic_Message = {
     [<ElasticField("keyword")>]
     [<ElasticSubField("raw", fieldType="keyword")>]
+    [<ElasticSubField("integer", fieldType = "integer", ignoreMalformed = true)>]
     [<ElasticSubField("ru", fieldType="text", analyzer="ru")>]
     [<ElasticSubField("en", fieldType="text", analyzer="en")>]
     id: string
@@ -156,6 +161,10 @@ let ``Recursive type serializes correctly``() =
                                     "raw": {
                                         "type": "keyword"
                                     },
+                                    "integer": {
+                                        "ignore_malformed":true,
+                                        "type":"integer"
+                                    },
                                     "ru": {
                                         "type": "text",
                                         "analyzer": "ru"
@@ -173,6 +182,10 @@ let ``Recursive type serializes correctly``() =
                                         "fields": {
                                             "raw": {
                                                 "type": "keyword"
+                                            },
+                                            "integer": {
+                                                "ignore_malformed":true,
+                                                "type":"integer"
                                             },
                                             "ru": {
                                                 "type": "text",
