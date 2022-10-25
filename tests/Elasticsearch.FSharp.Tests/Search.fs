@@ -122,6 +122,22 @@ let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) 
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
+[<Property>]
+let ``Value count aggregation serializes correctly``(aggName, aggFieldName) =
+    let expected = sprintf """{"aggs":{"%s":{"value_count":{"field":"%s"}}}}""" aggName aggFieldName
+    let actual =
+        Search [
+            Aggs [
+                NamedAgg (
+                    aggName, ValueCount [
+                        AggField aggFieldName
+                    ]
+                )
+            ]
+        ]
+        |> toJson
+    Assert.AreEqual(expected, actual)
+
 [<Property(MaxTest=10000)>]
 let ``Complex aggs serializes correctly``(complexAggName, complexAggFieldName,
                                          complexFilterAggName, complexFilterAggField,
