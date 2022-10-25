@@ -9,6 +9,7 @@ type QueryBody =
     | Term of TermQuery
     | Terms of TermsQuery
     | Range of RangeQuery
+    | Wildcard of WildcardQuery
     | Script of ScriptBody
     | MultiMatch of MultiMatchQuery
     | MatchPhrasePrefix of MatchPhrasePrefixQuery

@@ -44,7 +44,9 @@ type QueryBody with
         | Terms termsQuery ->
             Json.makeKeyValue "terms" (TermsQuery.termsQueryToJson termsQuery)
         | Range rangeQuery ->
-            Json.makeKeyValue "range" (RangeQuery.rangeQueryToJson rangeQuery)        
+            Json.makeKeyValue "range" (RangeQuery.rangeQueryToJson rangeQuery)
+        | Wildcard wildcardQuery ->
+            Json.makeKeyValue "wildcard" (WildcardQuery.wildcardQueryToJson wildcardQuery)
         | QueryBody.Script scriptQuery ->
             Json.makeKeyValue "script" (ScriptQuery.scriptQueryToJson scriptQuery)
         | MultiMatch multimatchBody ->
