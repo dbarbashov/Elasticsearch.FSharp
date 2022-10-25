@@ -62,6 +62,8 @@ type AggBody with
             Json.makeKeyValue "terms" (aggParamsToJson aggParams)
         | AggDateHistogram aggParams ->
             Json.makeKeyValue "date_histogram" (aggParamsToJson aggParams)
+        | ValueCount aggParams ->
+            Json.makeKeyValue "value_count" (aggParamsToJson aggParams)
 
 let complexAggsBodyToJson (complexAggs: AggsFieldsBody list) =
     Json.makeKeyValue "aggs" (Json.makeObject [

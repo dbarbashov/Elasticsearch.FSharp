@@ -29,3 +29,4 @@ and AggBody =
     | Stats of AggParam list
     | AggTerms of AggParam list
     | AggDateHistogram of AggParam list
+    | ValueCount of AggParam list
