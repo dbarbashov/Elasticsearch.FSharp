@@ -52,4 +52,8 @@
     <Compile Include="Mapping\Json.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Elasticsearch.FSharp.Tests" />
+  </ItemGroup>
+
 </Project>

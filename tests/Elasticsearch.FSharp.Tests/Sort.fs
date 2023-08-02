@@ -2,6 +2,7 @@ module Elasticsearch.FSharp.Tests.Sort
 
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
+open Elasticsearch.FSharp.Utility
 open NUnit.Framework
 open FsCheck.NUnit
 
@@ -27,6 +28,7 @@ let ``Sort serializes correctly``(fieldName, sortOrder, sortMode) =
         | SortMode.Median -> "median"
         
     let expected =
-        sprintf """{"sort":[{"%s":{"order":"%s","mode":"%s"}}],"query":{"match_all":{}}}""" fieldName orderStr modeStr
+        sprintf """{"sort":[{"%s":{"order":"%s","mode":"%s"}}],"query":{"match_all":{}}}"""
+            (Json.escapeString fieldName) (Json.escapeString orderStr) (Json.escapeString modeStr)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
