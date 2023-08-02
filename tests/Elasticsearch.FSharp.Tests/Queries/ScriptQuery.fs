@@ -2,6 +2,7 @@ module Elasticsearch.FSharp.Tests.Queries.ScriptQuery
 
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
+open Elasticsearch.FSharp.Utility
 open FsCheck.NUnit
 
 [<Property(MaxTest=10000)>]
@@ -16,7 +17,8 @@ let ``"script fields" in search query serializes correctly`` scriptName scriptSo
                 ]
             ]
         ]
-    let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"source":"%s","lang":"%s"}}}}""" scriptName scriptSource scriptLang
+    let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"source":"%s","lang":"%s"}}}}"""
+                       (Json.escapeString scriptName) (Json.escapeString scriptSource) (Json.escapeString scriptLang)
     let actual = toJson query
     expected = actual
     
@@ -30,6 +32,7 @@ let ``"script" in search query serializes correctly`` scriptSource scriptLang =
                 Script.Lang scriptLang
             ]
         ]
-    let expected = sprintf """{"query":{"match_all":{}},"script":{"source":"%s","lang":"%s"}}""" scriptSource scriptLang
+    let expected = sprintf """{"query":{"match_all":{}},"script":{"source":"%s","lang":"%s"}}"""
+                       (Json.escapeString scriptSource) (Json.escapeString scriptLang)
     let actual = toJson query
     expected = actual

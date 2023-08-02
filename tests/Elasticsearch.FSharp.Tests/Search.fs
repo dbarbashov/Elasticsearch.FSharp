@@ -1,5 +1,6 @@
 module Elasticsearch.FSharp.Tests.Search
 
+open Elasticsearch.FSharp.Utility
 open NUnit.Framework
 open FsCheck.NUnit
 
@@ -49,12 +50,12 @@ let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldNam
     let expected =
         sprintf
             """{"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}},"%s":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}}"""
-            fieldName1
-            script1
-            fieldName2
-            script2
-            paramName
-            paramValue
+            (Json.escapeString fieldName1)
+            (Json.escapeString script1)
+            (Json.escapeString fieldName2)
+            (Json.escapeString script2)
+            (Json.escapeString paramName)
+            (Json.escapeString paramValue)
             
     let actual = toJson query
     Assert.AreEqual(expected, actual)
@@ -81,9 +82,9 @@ let ``Script serializes correctly``(script1, paramName, paramValue) =
     let expected =
         sprintf
             """{"query":{"bool":{"filter":[{"script":{"script":{"lang":"painless","source":"%s","params":{"%s":"%s"}}}}]}}}"""
-            script1
-            paramName
-            paramValue
+            (Json.escapeString script1)
+            (Json.escapeString paramName)
+            (Json.escapeString paramValue)
             
     let actual = toJson query
     Assert.AreEqual(expected, actual)
@@ -100,7 +101,8 @@ let ``Aggs serializes correctly``(aggName, aggFieldName) =
                 )
             ]
         ]
-    let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}""" aggName aggFieldName
+    let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}"""
+                       (Json.escapeString aggName) (Json.escapeString aggFieldName)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
@@ -118,13 +120,14 @@ let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) 
             ]
         ]
     let expected = sprintf """{"aggs":{"%s":{"weighted_avg":{"value":{"field":"%s"},"weight":{"field":"%s"}}}}}"""
-                       aggName aggValueField aggFieldName
+                       (Json.escapeString aggName) (Json.escapeString aggValueField) (Json.escapeString aggFieldName)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
 [<Property>]
 let ``Value count aggregation serializes correctly``(aggName, aggFieldName) =
-    let expected = sprintf """{"aggs":{"%s":{"value_count":{"field":"%s"}}}}""" aggName aggFieldName
+    let expected = sprintf """{"aggs":{"%s":{"value_count":{"field":"%s"}}}}"""
+                       (Json.escapeString aggName) (Json.escapeString aggFieldName)
     let actual =
         Search [
             Aggs [
@@ -164,7 +167,10 @@ let ``Complex aggs serializes correctly``(complexAggName, complexAggFieldName,
             ]
         ]
     let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"},"aggs":{"%s":{"filter":{"match_all":{}},"aggs":{"%s":{"avg":{"field":"%s"},"aggs":{"%s":{"avg":{"field":"%s"}}}}}}}}}}"""
-                       complexAggName complexAggFieldName complexFilterAggName complexFilterAggName complexFilterAggField simpleAggName simpleAggField
+                       (Json.escapeString complexAggName) (Json.escapeString complexAggFieldName)
+                       (Json.escapeString complexFilterAggName) (Json.escapeString complexFilterAggName)
+                       (Json.escapeString complexFilterAggField) (Json.escapeString simpleAggName)
+                       (Json.escapeString simpleAggField)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     

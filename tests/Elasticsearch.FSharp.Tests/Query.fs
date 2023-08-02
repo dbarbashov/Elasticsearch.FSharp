@@ -1,5 +1,6 @@
 module Elasticsearch.FSharp.Tests.Query
 
+open Elasticsearch.FSharp.Utility
 open NUnit.Framework
 open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
@@ -59,7 +60,8 @@ let ``"match" serializes correctly``(fieldName, fieldValue) =
                 Match (fieldName, [MatchQuery fieldValue])
             )
         ]
-    let expected = sprintf """{"query":{"match":{"%s":{"query":"%s"}}}}""" fieldName fieldValue
+    let expected = sprintf """{"query":{"match":{"%s":{"query":"%s"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     
@@ -71,7 +73,8 @@ let ``"term" serializes correctly``(fieldName, fieldValue) =
                 Term (fieldName, [ExactValue fieldValue])
             )
         ]
-    let expected = sprintf """{"query":{"term":{"%s":{"value":"%s"}}}}""" fieldName fieldValue
+    let expected = sprintf """{"query":{"term":{"%s":{"value":"%s"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     
@@ -83,7 +86,8 @@ let ``"terms" serializes correctly``(fieldName, fieldValue) =
                 Terms (fieldName, [ValueList [fieldValue]])
             )
         ]
-    let expected = sprintf """{"query":{"terms":{"%s":["%s"]}}}""" fieldName fieldValue
+    let expected = sprintf """{"query":{"terms":{"%s":["%s"]}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
   
@@ -95,7 +99,8 @@ let ``"range" serializes correctly``(fieldName, fieldValue) =
                 Range (fieldName, [Gte fieldValue])
             )
         ]
-    let expected = sprintf """{"query":{"range":{"%s":{"gte":"%s"}}}}""" fieldName fieldValue
+    let expected = sprintf """{"query":{"range":{"%s":{"gte":"%s"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     
@@ -108,7 +113,8 @@ let ``"script" serializes correctly`` scriptName scriptSource =
                 scriptName, [ ScriptField.Lang "painless"; ScriptField.Source scriptSource ]
             ]
         ]
-    let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}}}}""" scriptName scriptSource
+    let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}}}}"""
+                       (Json.escapeString scriptName) (Json.escapeString scriptSource)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
     
@@ -128,7 +134,8 @@ let ``"multi_match" serializes correctly``(queryType, field, queryString, expans
                 ]
             )
         ]
-    let expected = sprintf """{"query":{"multi_match":{"type":"%s","fields":["%s"],"query":"%s","max_expansions":%d,"slop":%d,"tie_breaker":0.3}}}""" queryType field queryString expansions slop
+    let expected = sprintf """{"query":{"multi_match":{"type":"%s","fields":["%s"],"query":"%s","max_expansions":%d,"slop":%d,"tie_breaker":0.3}}}"""
+                       (Json.escapeString queryType) (Json.escapeString field) (Json.escapeString queryString) expansions slop
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
@@ -146,7 +153,8 @@ let ``"match_phrase_prefix* serializes correctly`` (fieldName, fieldValue, expan
                 )
             )
         ]
-    let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}""" fieldName fieldValue expansions
+    let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue) expansions
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
@@ -158,7 +166,7 @@ let ``"exists" serialization works correctly``(fieldName) =
                 Exists fieldName
             )
         ]
-    let expected = sprintf """{"query":{"exists":{"field":"%s"}}}""" fieldName
+    let expected = sprintf """{"query":{"exists":{"field":"%s"}}}""" (Json.escapeString fieldName)
     let actual = toJson query
     expected = actual
     
@@ -182,7 +190,7 @@ let ``"type" serializes correctly``(``type``) =
                 TypeEquals ``type``
             )
         ]
-    let expected = sprintf """{"query":{"type":{"value":"%s"}}}""" ``type``
+    let expected = sprintf """{"query":{"type":{"value":"%s"}}}""" (Json.escapeString ``type``)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
@@ -194,6 +202,7 @@ let ``"wildcard" serializes correctly``(fieldName, patternValue) =
                 Wildcard (fieldName, [PatternValue patternValue])
             )
         ]
-    let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s"}}}}""" fieldName patternValue
+    let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString patternValue)
     let actual = toJson query
     Assert.AreEqual(expected, actual)
