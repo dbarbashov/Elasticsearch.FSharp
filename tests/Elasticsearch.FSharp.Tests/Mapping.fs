@@ -4,7 +4,6 @@ open System.Collections.Generic
 open Elasticsearch.FSharp.Mapping.DSL
 open NUnit.Framework
 
-open System.Text.RegularExpressions
 open Elasticsearch.FSharp.Mapping.Attributes
 open Elasticsearch.FSharp.Mapping.Json
 
@@ -19,6 +18,22 @@ type TestEntity = {
     [<ElasticSubField("en", fieldType = "text", analyzer = "english")>]
     [<ElasticSubField("ru", fieldType = "text", analyzer = "russian")>]
     title: string
+}
+
+[<ElasticType("custom_entity_name")>]
+type TestEntityWithCustomName = {
+    [<ElasticField("long")>]
+    id: int64
+
+    [<ElasticField("text", name = "overriden_title_name")>]
+    [<ElasticSubField("raw", fieldType = "keyword")>]
+    [<ElasticSubField("integer", fieldType = "integer", ignoreMalformed=true)>]
+    [<ElasticSubField("en", fieldType = "text", analyzer = "english")>]
+    [<ElasticSubField("ru", fieldType = "text", analyzer = "russian")>]
+    title: string
+    
+    [<ElasticField("text")>]
+    nothing: string
 }
 
 [<Test>]
@@ -205,4 +220,36 @@ let ``Recursive type serializes correctly``() =
             }"""
     let actual = mappingJson
     printf "%s" mappingJson
+    Assert.AreEqual(expected, actual)
+
+[<Test>]
+let ``Custom field name serializes correctly``() =
+    let mapping = generateElasticMapping typeof<TestEntityWithCustomName>
+    let mappingJson = mapping.ToJson()
+    let expected =
+        Helpers.removeWhitespace
+            """{
+                "mappings": {
+                    "_doc": {
+                        "properties": {
+                            "id": {
+                                "type": "long"
+                            },
+                            "overriden_title_name": {
+                                "type": "text",
+                                "fields": {
+                                    "raw": { "type":"keyword" },
+                                    "integer": { "ignore_malformed":true, "type":"integer" },
+                                    "en": { "type":"text", "analyzer":"english" },
+                                    "ru": { "type":"text", "analyzer":"russian" }
+                                }
+                            },
+                            "nothing": {
+                                "type":"text"
+                            }
+                        }
+                    }
+                }
+            }"""
+    let actual = mappingJson
     Assert.AreEqual(expected, actual)
