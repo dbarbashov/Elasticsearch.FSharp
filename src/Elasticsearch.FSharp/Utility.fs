@@ -23,6 +23,7 @@ module Json =
         else
             s
     let inline quoteString (s: string) = $"\"{escapeString s}\""
+    let inline uintToString (ui: uint) = ui.ToString()
     let inline boolToString (b: bool) = if b then "true" else "false"
     let inline makeKeyValue (key: string) (value: string) = $"{quoteString key}:{value}"
     let inline makeObject innerParts =
