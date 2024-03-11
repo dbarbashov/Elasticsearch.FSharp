@@ -22,6 +22,10 @@ type PropertyMapping with
         match x.Type with
         | Some t -> yield Json.makeKeyValue "type" (Json.quoteString t)
         | None -> ()
+            
+        match x.IgnoreAbove with
+        | Some ia -> yield Json.makeKeyValue "ignore_above" (Json.uintToString ia)
+        | None -> ()
         
         match x.Analyzer with
         | Some a -> yield Json.makeKeyValue "analyzer" (Json.quoteString a)

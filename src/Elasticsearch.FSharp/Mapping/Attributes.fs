@@ -20,6 +20,7 @@ type ElasticField([<Optional; DefaultParameterValue(null:string)>] fieldType:str
                   [<Optional; DefaultParameterValue(null:string)>] analyzer:string, 
                   [<Optional; DefaultParameterValue(true)>] enabled:bool,
                   [<Optional; DefaultParameterValue(null:string)>] format:string,
+                  [<Optional; DefaultParameterValue(0u:uint)>] ignoreAbove:uint,
                   [<Optional; DefaultParameterValue(false)>] useProperties:bool,
                   [<Optional; DefaultParameterValue(10)>] maxDepth:int,
                   [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool) =
@@ -30,6 +31,7 @@ type ElasticField([<Optional; DefaultParameterValue(null:string)>] fieldType:str
     member val Enabled = enabled with get
     member val IgnoreMalformed = ignoreMalformed with get
     member val Format = format with get
+    member val IgnoreAbove = ignoreAbove with get
     member val UseProperties = useProperties with get
     member val MaxDepth = maxDepth with get
 
@@ -40,10 +42,11 @@ type ElasticSubField(fieldName: string,
                      [<Optional; DefaultParameterValue(null:string)>] analyzer:string,
                      [<Optional; DefaultParameterValue(true)>] enabled:bool,
                      [<Optional; DefaultParameterValue(null:string)>] format:string,
+                     [<Optional; DefaultParameterValue(0u:uint)>] ignoreAbove:uint,
                      [<Optional; DefaultParameterValue(false)>] useProperties:bool,
                      [<Optional; DefaultParameterValue(10)>] maxDepth:int,
                      [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool) =
-    inherit ElasticField(fieldType, analyzer, enabled, format, useProperties, maxDepth, ignoreMalformed)
+    inherit ElasticField(fieldType, analyzer, enabled, format, ignoreAbove, useProperties, maxDepth, ignoreMalformed)
     
     member val FieldName = fieldName with get
     
@@ -78,6 +81,11 @@ let fieldToMapping (propAttr: ElasticField) : PropertyMapping =
                 None
             else
                 Some propAttr.Format
+        IgnoreAbove =
+            if propAttr.IgnoreAbove = 0u then
+                None
+            else
+                Some propAttr.IgnoreAbove
         Enabled = propAttr.Enabled
         IgnoreMalformed = propAttr.IgnoreMalformed
     }

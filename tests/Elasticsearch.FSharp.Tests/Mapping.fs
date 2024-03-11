@@ -134,7 +134,7 @@ let ``Type serializes correctly to put mappings json``() =
     
 [<ElasticType("message")>]
 type Elastic_Message = {
-    [<ElasticField("keyword")>]
+    [<ElasticField("keyword", ignoreAbove = 1000u)>]
     [<ElasticSubField("raw", fieldType="keyword")>]
     [<ElasticSubField("integer", fieldType = "integer", ignoreMalformed = true)>]
     [<ElasticSubField("ru", fieldType="text", analyzer="ru")>]
@@ -157,6 +157,7 @@ let ``Recursive type serializes correctly``() =
                         "properties": {
                             "id": {
                                 "type": "keyword",
+                                "ignore_above": 1000,
                                 "fields": {
                                     "raw": {
                                         "type": "keyword"
@@ -179,6 +180,7 @@ let ``Recursive type serializes correctly``() =
                                 "properties": {
                                     "id": {
                                         "type": "keyword",
+                                        "ignore_above": 1000,
                                         "fields": {
                                             "raw": {
                                                 "type": "keyword"

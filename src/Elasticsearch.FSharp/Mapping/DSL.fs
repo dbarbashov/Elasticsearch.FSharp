@@ -12,6 +12,7 @@ type PropertyMapping = {
     Enabled: bool
     IgnoreMalformed: bool
     Format: string option
+    IgnoreAbove: uint option
     Properties: Dictionary<string, PropertyMapping> option
     Fields: Dictionary<string, PropertyMapping> option
 }
@@ -22,6 +23,7 @@ with
         Enabled = true
         IgnoreMalformed = false
         Format = None
+        IgnoreAbove = None
         Properties = None
         Fields = None
     }
