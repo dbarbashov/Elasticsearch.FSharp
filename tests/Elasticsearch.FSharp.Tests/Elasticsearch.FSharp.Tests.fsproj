@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <WarningsAsErrors>true</WarningsAsErrors>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FsCheck" Version="2.14.0" />
-        <PackageReference Include="FsCheck.NUnit" Version="2.14.0" />
-        <PackageReference Include="nunit" Version="3.11.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+        <PackageReference Include="FsCheck" Version="2.16.6" />
+        <PackageReference Include="FsCheck.NUnit" Version="2.16.6" />
+        <PackageReference Include="nunit" Version="3.14.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     </ItemGroup>
 
     <ItemGroup>
