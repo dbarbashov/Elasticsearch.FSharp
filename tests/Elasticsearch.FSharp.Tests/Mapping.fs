@@ -1,12 +1,10 @@
 module Elasticsearch.FSharp.Tests.Mapping
 
 open System.Collections.Generic
-open Elasticsearch.FSharp.Mapping.DSL
-open NUnit.Framework
-
-open System.Text.RegularExpressions
 open Elasticsearch.FSharp.Mapping.Attributes
+open Elasticsearch.FSharp.Mapping.DSL
 open Elasticsearch.FSharp.Mapping.Json
+open NUnit.Framework
 
 [<ElasticType("custom_entity_name")>]
 type TestEntity = {
@@ -19,66 +17,80 @@ type TestEntity = {
     [<ElasticSubField("en", fieldType = "text", analyzer = "english")>]
     [<ElasticSubField("ru", fieldType = "text", analyzer = "russian")>]
     title: string
+
+    [<ElasticField("flattened", ignoreAbove=1000u)>]
+    baskets: string[]
 }
 
-[<Test>]
-let ``Type serializes correctly``() =
+let inline private getBasketsProps usingOpenSearch =
+    if usingOpenSearch then
+        """"baskets": { "type":"flat_object" }"""
+    else
+        """"baskets": { "type":"flattened", "ignore_above":1000 }"""
+
+[<TestCase(false)>]
+[<TestCase(true)>]
+let ``Type serializes correctly``(usingOpenSearch: bool) =
     let mapping = generateElasticMapping typeof<TestEntity>
-    let mappingJson = mapping.ToJson()
+    let mappingJson = mapping.ToJson(usingOpenSearch=usingOpenSearch)
     let expected =
         Helpers.removeWhitespace
-            """{
-                "mappings": {
-                    "_doc": {
-                        "properties": {
-                            "id": {
+           $"""{{
+                "mappings": {{
+                    "_doc": {{
+                        "properties": {{
+                            "id": {{
                                 "type": "long"
-                            },
-                            "title": {
+                            }},
+                            "title": {{
                                 "type": "text",
-                                "fields": {
-                                    "raw": { "type":"keyword" },
-                                    "integer": { "ignore_malformed":true, "type":"integer" },
-                                    "en": { "type":"text", "analyzer":"english" },
-                                    "ru": { "type":"text", "analyzer":"russian" }
-                                }
-                            }
-                        }
-                    }
-                }
-            }"""
+                                "fields": {{
+                                    "raw": {{ "type":"keyword" }},
+                                    "integer": {{ "ignore_malformed":true, "type":"integer" }},
+                                    "en": {{ "type":"text", "analyzer":"english" }},
+                                    "ru": {{ "type":"text", "analyzer":"russian" }}
+                                }}
+                            }},
+                            {getBasketsProps usingOpenSearch}
+                        }}
+                    }}
+                }}
+            }}"""
     let actual = mappingJson
     Assert.AreEqual(expected, actual)
-    
-[<Test>]
-let ``Type serializes correctly with excluded type name``() =
+
+[<TestCase(false)>]
+[<TestCase(true)>]
+let ``Type serializes correctly with excluded type name``(usingOpenSearch: bool) =
     let mapping = generateElasticMapping typeof<TestEntity>
-    let mappingJson = mapping.ToJson(includeTypeName=false)
+    let mappingJson = mapping.ToJson(includeTypeName=false, usingOpenSearch=usingOpenSearch)
     let expected =
         Helpers.removeWhitespace
-            """{
-                "mappings": {
-                    "properties": {
-                        "id": {
+           $"""{{
+                "mappings": {{
+                    "properties": {{
+                        "id": {{
                             "type": "long"
-                        },
-                        "title": {
+                        }},
+                        "title": {{
                             "type": "text",
-                            "fields": {
-                                "raw": { "type":"keyword" },
-                                "integer": { "ignore_malformed":true, "type":"integer" },
-                                "en": { "type":"text", "analyzer":"english" },
-                                "ru": { "type":"text", "analyzer":"russian" }
-                            }
-                        }
-                    }
-                }
-            }"""
+                            "fields": {{
+                                "raw": {{ "type":"keyword" }},
+                                "integer": {{ "ignore_malformed":true, "type":"integer" }},
+                                "en": {{ "type":"text", "analyzer":"english" }},
+                                "ru": {{ "type":"text", "analyzer":"russian" }}
+                            }}
+                        }},
+                        {getBasketsProps usingOpenSearch}
+                    }}
+                }}
+            }}"""
     let actual = mappingJson
     Assert.AreEqual(expected, actual)
-    
-[<Test>]
-let ``Type serializes correctly with settings``() =
+
+[<TestCase(false)>]
+[<TestCase(true)>]
+let ``Type serializes correctly with settings``(usingOpenSearch: bool) =
     let mapping = generateElasticMapping typeof<TestEntity>
     let mapping =
         { mapping with 
@@ -91,42 +103,45 @@ let ``Type serializes correctly with settings``() =
                 |> Dictionary
                 |> Some
         }
-    let mappingJson = mapping.ToJson(includeTypeName=false)
+    let mappingJson = mapping.ToJson(includeTypeName=false, usingOpenSearch=usingOpenSearch)
     let expected =
         Helpers.removeWhitespace
-            """{
-                "settings": {
+           $"""{{
+                "settings": {{
                     "number_of_shards": "5",
                     "number_of_replicas": "2"
-                },
-                "mappings": {
-                    "properties": {
-                        "id": {
+                }},
+                "mappings": {{
+                    "properties": {{
+                        "id": {{
                             "type": "long"
-                        },
-                        "title": {
+                        }},
+                        "title": {{
                             "type": "text",
-                            "fields": {
-                                "raw": { "type":"keyword" },
-                                "integer": { "ignore_malformed":true, "type":"integer" },
-                                "en": { "type":"text", "analyzer":"english" },
-                                "ru": { "type":"text", "analyzer":"russian" }
-                            }
-                        }
-                    }
-                }
-            }"""
+                            "fields": {{
+                                "raw": {{ "type":"keyword" }},
+                                "integer": {{ "ignore_malformed":true, "type":"integer" }},
+                                "en": {{ "type":"text", "analyzer":"english" }},
+                                "ru": {{ "type":"text", "analyzer":"russian" }}
+                            }}
+                        }},
+                        {getBasketsProps usingOpenSearch}
+                    }}
+                }}
+            }}"""
     let actual = mappingJson
     Assert.AreEqual(expected, actual)
-    
-[<Test>]
-let ``Type serializes correctly to put mappings json``() =
+
+[<TestCase(false)>]
+[<TestCase(true)>]
+let ``Type serializes correctly to put mappings json``(usingOpenSearch: bool) =
     let mapping = generateElasticMapping typeof<TestEntity>
-    let mappingJson = mapping.ToPutMappingsJson()
+    let mappingJson = mapping.ToPutMappingsJson(usingOpenSearch)
     let expected =
         [|
             """{"properties":{"id": { "type": "long" }}}"""
             """{"properties":{"title": { "type": "text", "fields": { "raw": { "type":"keyword" }, "integer": { "ignore_malformed":true, "type":"integer" }, "en": { "type":"text", "analyzer":"english" }, "ru": { "type":"text", "analyzer":"russian" } } }}}"""
+            $"""{{"properties":{{ {getBasketsProps usingOpenSearch} }}}}"""
         |]
         |> Array.map Helpers.removeWhitespace
     let actual = mappingJson
@@ -206,5 +221,5 @@ let ``Recursive type serializes correctly``() =
                 }
             }"""
     let actual = mappingJson
-    printf "%s" mappingJson
+    printf $"%s{mappingJson}"
     Assert.AreEqual(expected, actual)
