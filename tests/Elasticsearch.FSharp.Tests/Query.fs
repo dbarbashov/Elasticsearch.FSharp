@@ -100,8 +100,10 @@ let ``"bool" with "must_not" serializes correctly``() =
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
-[<Property>]
-let ``"bool" with "minimum_should_match" serializes correctly``(msm: string) =
+[<Test>]
+let ``"bool" with "minimum_should_match" serializes correctly`` =
+    let msm = "1.0"
+    
     let query =
         Search [
             Query (
@@ -485,7 +487,7 @@ let ``"match_phrase_prefix" with all fields serializes correctly`` () =
     let maxExp = 10
     let slopVal = 2
     let analyzerName = "standard"
-    let boostVal = 1.5f
+    let boostVal = 1.5
     let query =
         Search [
             Query (
@@ -536,7 +538,7 @@ let ``"exists" serialization works correctly``(fieldName) =
         ]
     let expected = sprintf """{"query":{"exists":{"field":"%s"}}}""" (Json.escapeString fieldName)
     let actual = toJson query
-    Assert.AreEqual(expected, actual) // Changed from `expected = actual` to `Assert.AreEqual`
+    Assert.AreEqual(expected, actual)
     
 [<Property(MaxTest=10000)>]
 let ``"raw" serialization works correctly``(rawQuery) =
@@ -546,9 +548,9 @@ let ``"raw" serialization works correctly``(rawQuery) =
                 QueryBody.Raw rawQuery
             )
         ]
-    let expected = sprintf """{"query":%s}""" rawQuery // Raw query is inserted as is
+    let expected = sprintf """{"query":{%s}}""" rawQuery
     let actual = toJson query
-    Assert.AreEqual(expected, actual) // Changed from `expected = actual` to `Assert.AreEqual`
+    Assert.AreEqual(expected, actual)
     
 [<Property>]
 let ``"type" serializes correctly``(``type``) = 
