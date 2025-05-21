@@ -60,7 +60,6 @@ Would result in following JSON:
   * [x] Script query
   * [x] MultiMatch query
   * [x] MatchPhrasePrefix query
-    * [x] `rewrite` and `boost` parameters
   * [x] Exists query
   * [x] Type query
   * [x] Wildcard query

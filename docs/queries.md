@@ -88,7 +88,6 @@ let query =
             MatchPhrasePrefixQueryField.MatchQuery "quick brown f"
             MatchPhrasePrefixQueryField.MaxExpansions 10
             MatchPhrasePrefixQueryField.Boost 0.8
-            MatchPhrasePrefixQueryField.Rewrite (RewriteOption.TopTermsBoost 5)
         ]))
     ]
 ```
@@ -100,8 +99,7 @@ JSON:
       "message": {
         "query": "quick brown f",
         "max_expansions": 10,
-        "boost": 0.8,
-        "rewrite": "top_terms_boost_5"
+        "boost": 0.8
       }
     }
   }
