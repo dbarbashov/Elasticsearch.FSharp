@@ -23,7 +23,8 @@ type ElasticField([<Optional; DefaultParameterValue(null:string)>] fieldType:str
                   [<Optional; DefaultParameterValue(0u:uint)>] ignoreAbove:uint,
                   [<Optional; DefaultParameterValue(false)>] useProperties:bool,
                   [<Optional; DefaultParameterValue(10)>] maxDepth:int,
-                  [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool) =
+                  [<Optional; DefaultParameterValue(false)>] ignoreMalformed:bool,
+                  [<Optional; DefaultParameterValue(null:string)>] name:string) =
     inherit Attribute()
     
     member val FieldType = fieldType with get
@@ -34,6 +35,7 @@ type ElasticField([<Optional; DefaultParameterValue(null:string)>] fieldType:str
     member val IgnoreAbove = ignoreAbove with get
     member val UseProperties = useProperties with get
     member val MaxDepth = maxDepth with get
+    member val Name = name with get
 
 /// Use this field on attributes of a type that should represent additional `fields` of a field
 [<AttributeUsage(AttributeTargets.Property, AllowMultiple = true)>]
@@ -133,8 +135,13 @@ let rec private getTypePropertyMappings (t: Type) (depth: int) : Dictionary<stri
                 else
                     mapping
             
+            let propName =
+                match elasticFieldAttribute.Name with
+                | null -> prop.Name
+                | name -> name
+            
             if mapping <> PropertyMapping.Default then 
-                result.[prop.Name] <- mapping
+                result.[propName] <- mapping
         | None ->
             ()
     result
