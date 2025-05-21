@@ -7,5 +7,4 @@ and MatchPhrasePrefixQueryField =
     | MaxExpansions of int
     | Slop of int
     | Analyzer of string
-    | Rewrite of RewriteOption
     | Boost of float
