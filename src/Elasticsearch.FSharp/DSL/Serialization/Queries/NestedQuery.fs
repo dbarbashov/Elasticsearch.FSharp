@@ -4,6 +4,7 @@ open System
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.Utility
 
+// Private helper for ScoreModeOption to JSON string conversion
 let private scoreModeOptionToString (scoreMode: ScoreModeOption) : string =
     match scoreMode with
     | ScoreModeOption.ScoreModeAvg -> "avg"
@@ -12,38 +13,32 @@ let private scoreModeOptionToString (scoreMode: ScoreModeOption) : string =
     | ScoreModeOption.ScoreModeNone -> "none"
     | ScoreModeOption.ScoreModeSum -> "sum"
 
+// Private helper to convert a single NestedQueryField to its JSON key-value string part
+let private nestedQueryFieldToJson (queryBodySerializer: QueryBody -> string) (field: NestedQueryField) : string =
+    match field with
+    | NestedQueryField.Path p ->
+        Json.makeKeyValue "path" (Json.quoteString p)
+    | NestedQueryField.QueryBody q ->
+        Json.makeKeyValue "query" (queryBodySerializer q) // queryBodySerializer produces a string which is a valid JSON object
+    | NestedQueryField.ScoreMode sm ->
+        Json.makeKeyValue "score_mode" (Json.quoteString (scoreModeOptionToString sm))
+    | NestedQueryField.IgnoreUnmapped iu ->
+        Json.makeKeyValue "ignore_unmapped" (iu.ToString().ToLowerInvariant()) // JSON booleans are lowercase literals
+
+// Main serialization function for the content of a "nested" query object
 let nestedQueryToJson (queryBodySerializer: QueryBody -> string) (queryParams: NestedQueryField list) : string =
-    let mutable pathOpt: string option = None
-    let mutable queryOpt: QueryBody option = None
-    let mutable scoreModeOpt: ScoreModeOption option = None
-    let mutable ignoreUnmappedOpt: bool option = None
+    // Validate that 'path' and 'query' fields are present, as they are required for a nested query.
+    let hasPath = queryParams |> List.exists (function NestedQueryField.Path _ -> true | _ -> false)
+    let hasQuery = queryParams |> List.exists (function NestedQueryField.QueryBody _ -> true | _ -> false)
 
-    for param in queryParams do
-        match param with
-        | NestedQueryField.Path p -> pathOpt <- Some p
-        | NestedQueryField.QueryBody q -> queryOpt <- Some q
-        | NestedQueryField.ScoreMode sm -> scoreModeOpt <- Some sm
-        | NestedQueryField.IgnoreUnmapped iu -> ignoreUnmappedOpt <- Some iu
+    if not hasPath then
+        raise (ArgumentException("Nested query requires a 'path' field. Please include 'Path \"your_path\"' in the query parameters."))
+    if not hasQuery then
+        raise (ArgumentException("Nested query requires a 'query' field. Please include 'QueryBody YourQueryDefinition' in the query parameters."))
 
-    let pathJson =
-        match pathOpt with
-        | Some p -> sprintf """"path":%s""" (Json.quoteString p)
-        | None -> raise (ArgumentException("Nested query requires a 'path' field for serialization."))
-
-    // For the inner query, we expect the serializer to produce the full query object string,
-    // e.g., {"match_all":{}} or {"term":{"field":{"value":"val"}}}
-    // The queryBodySerializer passed in should be `queryBodyToJson` from the main Query.fs serializer,
-    // which already wraps the specific query in its own object like {"match": ...}
-    let queryJson =
-        match queryOpt with
-        | Some q -> sprintf """"query":%s""" (queryBodySerializer q) 
-        | None -> raise (ArgumentException("Nested query requires a 'query' field for serialization."))
-
-    let optionalParts = ResizeArray()
-    scoreModeOpt |> Option.iter (fun sm -> optionalParts.Add(sprintf """"score_mode":%s""" (Json.quoteString (scoreModeOptionToString sm))))
-    ignoreUnmappedOpt |> Option.iter (fun iu -> optionalParts.Add(sprintf """"ignore_unmapped":%s""" (iu.ToString().ToLowerInvariant())))
-    
-    let allParts = [pathJson; queryJson] @ (List.ofSeq optionalParts)
-    // This function produces the *content* of the "nested" query object, e.g. "path":"...", "query":{...}
-    // The calling function (in DSL.Serialization.Query) will wrap this with {"nested": ... }
-    String.concat "," allParts
+    // Construct the JSON object from the list of query parameters.
+    // Each parameter is converted to its JSON representation by nestedQueryFieldToJson.
+    Json.makeObject [
+        for param in queryParams ->
+            nestedQueryFieldToJson queryBodySerializer param
+    ]
