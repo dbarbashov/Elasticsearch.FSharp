@@ -1,4 +1,4 @@
-namespace Elasticsearch.FSharp.DSL.Serialization.Queries.NestedQuery
+module Elasticsearch.FSharp.DSL.Serialization.Queries.NestedQuery
 
 open System
 open Elasticsearch.FSharp.DSL
@@ -6,13 +6,13 @@ open Elasticsearch.FSharp.Utility
 
 let private scoreModeOptionToString (scoreMode: ScoreModeOption) : string =
     match scoreMode with
-    | ScoreModeOption.Avg -> "avg"
-    | ScoreModeOption.Max -> "max"
-    | ScoreModeOption.Min -> "min"
-    | ScoreModeOption.NoneScore -> "none"
-    | ScoreModeOption.Sum -> "sum"
+    | ScoreModeOption.ScoreModeAvg -> "avg"
+    | ScoreModeOption.ScoreModeMax -> "max"
+    | ScoreModeOption.ScoreModeMin -> "min"
+    | ScoreModeOption.ScoreModeNone -> "none"
+    | ScoreModeOption.ScoreModeSum -> "sum"
 
-let internal serializeNestedQuery (queryBodySerializer: QueryBody -> string) (queryParams: NestedQueryField list) : string =
+let nestedQueryToJson (queryBodySerializer: QueryBody -> string) (queryParams: NestedQueryField list) : string =
     let mutable pathOpt: string option = None
     let mutable queryOpt: QueryBody option = None
     let mutable scoreModeOpt: ScoreModeOption option = None
@@ -21,7 +21,7 @@ let internal serializeNestedQuery (queryBodySerializer: QueryBody -> string) (qu
     for param in queryParams do
         match param with
         | NestedQueryField.Path p -> pathOpt <- Some p
-        | NestedQueryField.Query q -> queryOpt <- Some q
+        | NestedQueryField.QueryBody q -> queryOpt <- Some q
         | NestedQueryField.ScoreMode sm -> scoreModeOpt <- Some sm
         | NestedQueryField.IgnoreUnmapped iu -> ignoreUnmappedOpt <- Some iu
 
