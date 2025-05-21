@@ -58,4 +58,4 @@ let ``"range" with multiple conditions serializes correctly``() =
             )
         ]
     let expected = """{"query":{"range":{"date":{"gte":"2020-01-01","lte":"2020-12-31","time_zone":"+01:00"}}}}"""
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace (toJson query))
+    Assert.AreEqual(expected, (toJson query))

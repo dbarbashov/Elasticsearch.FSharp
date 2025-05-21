@@ -86,4 +86,4 @@ let ``"match" with all fields serializes correctly (current behavior)``() =
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s","operator":"%s","zero_terms_query":%s,"cutoff_frequency":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) (Json.escapeString op) zeroTerms (cutoff.ToString())
     let actual = toJson query
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace actual)
+    Assert.AreEqual(expected, actual)

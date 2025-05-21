@@ -1,4 +1,4 @@
-module internal Elasticsearch.FSharp.Tests.Helpers
+module Elasticsearch.FSharp.Tests.Helpers
 
 open System.Text.RegularExpressions
 

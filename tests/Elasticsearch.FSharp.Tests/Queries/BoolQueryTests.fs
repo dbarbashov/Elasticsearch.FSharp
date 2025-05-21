@@ -103,4 +103,4 @@ let ``"bool" with multiple clauses serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"must":[{"match":{"title":{"query":"elasticsearch"}}}],"filter":[{"term":{"status":{"value":"published"}}}],"must_not":[{"term":{"tags":{"value":"archived"}}}],"should":[{"match":{"content":{"query":"relevant"}}}],"minimum_should_match":"1"}}}"""
     let actual = toJson query
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace actual)
+    Assert.AreEqual(removeWhitespace expected, removeWhitespace actual)

@@ -40,7 +40,7 @@ let ``"multi_match" with raw string param serializes correctly``() =
             )
         ]
     let expected = """{"query":{"multi_match":{"query":"search text","custom_param":"custom_value"}}}"""
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace (toJson query))
+    Assert.AreEqual(expected, (toJson query))
 
 [<Test>]
 let ``"multi_match" with raw numeric param serializes correctly``() =
@@ -54,4 +54,4 @@ let ``"multi_match" with raw numeric param serializes correctly``() =
             )
         ]
     let expected = """{"query":{"multi_match":{"query":"search text","custom_param":123.45}}}"""
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace (toJson query))
+    Assert.AreEqual(expected, (toJson query))

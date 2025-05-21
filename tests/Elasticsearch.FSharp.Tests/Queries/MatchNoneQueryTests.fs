@@ -4,7 +4,6 @@ open NUnit.Framework
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Test>]
 let ``"match_none" serializes correctly``() =

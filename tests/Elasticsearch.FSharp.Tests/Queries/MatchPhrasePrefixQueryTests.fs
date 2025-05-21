@@ -5,7 +5,6 @@ open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Property>]
 let ``"match_phrase_prefix" base serializes correctly`` (fieldName, fieldValue, expansions) =
@@ -108,4 +107,4 @@ let ``"match_phrase_prefix" with all fields serializes correctly`` () =
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d,"slop":%d,"analyzer":"%s","boost":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) maxExp slopVal (Json.escapeString analyzerName) (boostVal.ToString())
-    Assert.AreEqual(Helpers.removeWhitespace expected, Helpers.removeWhitespace (toJson query))
+    Assert.AreEqual(expected, toJson query)
