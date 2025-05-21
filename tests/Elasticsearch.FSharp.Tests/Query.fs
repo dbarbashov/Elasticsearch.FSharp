@@ -619,7 +619,7 @@ let ``"nested" query basic serializes correctly``() =
             Query (
                 Nested [
                     NestedQueryField.Path "obj1"
-                    NestedQueryField.Query (
+                    NestedQueryField.QueryBody (
                         Match ("obj1.name", [MatchQuery "blue"])
                     )
                 ]
@@ -636,8 +636,8 @@ let ``"nested" query with score_mode serializes correctly``() =
             Query (
                 Nested [
                     NestedQueryField.Path "obj1"
-                    NestedQueryField.Query (MatchAll)
-                    NestedQueryField.ScoreMode ScoreModeOption.Max
+                    NestedQueryField.QueryBody (MatchAll)
+                    NestedQueryField.ScoreMode ScoreModeOption.ScoreModeMax
                 ]
             )
         ]
@@ -652,7 +652,7 @@ let ``"nested" query with ignore_unmapped serializes correctly``() =
             Query (
                 Nested [
                     NestedQueryField.Path "obj1"
-                    NestedQueryField.Query (MatchAll)
+                    NestedQueryField.QueryBody (MatchAll)
                     NestedQueryField.IgnoreUnmapped true
                 ]
             )
@@ -668,12 +668,12 @@ let ``"nested" query with all options serializes correctly``() =
             Query (
                 Nested [
                     NestedQueryField.Path "obj1.child"
-                    NestedQueryField.Query (
+                    NestedQueryField.QueryBody (
                         Bool [
                             Must [ Term ("obj1.child.field", [ExactValue "value"]) ]
                         ]
                     )
-                    NestedQueryField.ScoreMode ScoreModeOption.Sum
+                    NestedQueryField.ScoreMode ScoreModeOption.ScoreModeSum
                     NestedQueryField.IgnoreUnmapped false
                 ]
             )
@@ -689,10 +689,10 @@ let ``"nested" query multi-level serializes correctly``() =
             Query (
                 Nested [
                     NestedQueryField.Path "driver"
-                    NestedQueryField.Query (
+                    NestedQueryField.QueryBody (
                         Nested [
                             NestedQueryField.Path "driver.vehicle"
-                            NestedQueryField.Query (
+                            NestedQueryField.QueryBody (
                                 Bool [
                                     Must [
                                         Match ("driver.vehicle.make", [MatchQuery "Powell Motors"])
