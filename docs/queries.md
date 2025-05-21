@@ -105,3 +105,32 @@ JSON:
   }
 }
 ```
+
+# Nested Query
+Query:
+```f#
+let query =
+    Search [
+        Query (
+            Nested [
+                NestedQueryField.Path "my_nested_path"
+                NestedQueryField.QueryBody (
+                    Match ("my_nested_path.field", [MatchQuery "value"])
+                )
+            ]
+        )
+    ]
+```
+JSON:
+```json
+{
+  "query": {
+    "nested": {
+      "path": "my_nested_path",
+      "query": {
+        "match": { "my_nested_path.field": { "query": "value" } }
+      }
+    }
+  }
+}
+```

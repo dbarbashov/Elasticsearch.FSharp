@@ -22,6 +22,25 @@ The `SearchBody` type can include:
 - `Source_ of SourceBody`: Control which parts of the source document are returned. See [Source Filtering](./source-filtering.md).
 - `Raw of Key: string * Value: string`: Allows you to include raw JSON key-value pairs in the search body.
 
+The `QueryBody` type (used within `Query (...)`) can include:
+- `MatchAll`
+- `MatchNone`
+- `Ids of string list`
+- `Bool of BoolQuery list`
+- `Match of MatchQuery`
+- `Term of TermQuery`
+- `Terms of TermsQuery`
+- `Range of RangeQuery`
+- `Wildcard of WildcardQuery`
+- `Script of ScriptBody`
+- `MultiMatch of MultiMatchQuery`
+- `MatchPhrasePrefix of MatchPhrasePrefixQuery`
+- `Nested of NestedQuery`
+- `Exists of FieldName: string`
+- `Raw of RawString: string`
+- `TypeEquals of string`
+
+
 ## Basic Query Example
 
 All queries are done by specifying a `Query` value in the list of `SearchBody` elements:
