@@ -1,6 +1,7 @@
 module internal Elasticsearch.FSharp.DSL.Serialization.Search
 
 open Elasticsearch.FSharp.DSL
+open Elasticsearch.FSharp.DSL.Serialization.Query
 open Elasticsearch.FSharp.Utility
 open Elasticsearch.FSharp.DSL.Serialization.Sort
 open Elasticsearch.FSharp.DSL.Serialization.Source
@@ -36,6 +37,8 @@ type SearchBody with
             Json.makeKeyValue "_source" (x.ToJson())
         | Raw (key, value) ->
             Json.makeKeyValue key value
+        | TrackTotalHits x ->
+            Json.makeKeyValue "track_total_hits" (Json.boolToString x)
         
 type ElasticDSL with
     member x.ToJson() =
