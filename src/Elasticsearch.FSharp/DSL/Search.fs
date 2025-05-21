@@ -13,3 +13,4 @@ and SearchBody =
     | Size of int
     | Source_ of SourceBody
     | Raw of Key: string * Value: string
+    | TrackTotalHits of bool

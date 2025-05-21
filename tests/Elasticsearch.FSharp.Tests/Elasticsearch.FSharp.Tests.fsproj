@@ -34,6 +34,8 @@
         <Compile Include="Queries\TermsQueryTests.fs" />
         <Compile Include="Queries\TypeQueryTests.fs" />
         <Compile Include="Queries\WildcardQueryTests.fs" />
+        <Compile Include="SearchBody\ScriptFieldsTests.fs" />
+        <Compile Include="SearchBody\TrackTotalHitsTests.fs" />
         <Compile Include="Sort.fs" />
         <Compile Include="Search.fs" />
     </ItemGroup>
