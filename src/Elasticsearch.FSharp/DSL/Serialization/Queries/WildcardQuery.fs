@@ -7,16 +7,18 @@ type WildcardQueryField with
     member x.ToJson() =
         match x with
         | PatternValue null ->
-            Json.makeObject [ Json.makeKeyValue "value" (Json.quoteString "") ]
+            Json.makeKeyValue "value" (Json.quoteString "")
         | PatternValue x ->
-            Json.makeObject [ Json.makeKeyValue "value" (Json.quoteString x) ]
+            Json.makeKeyValue "value" (Json.quoteString x)
+        | Rewrite opt ->
+            Json.makeKeyValue "rewrite" (Json.quoteString (opt.ToStringValue()))
+        | Boost b ->
+            Json.makeKeyValue "boost" (b.ToString())
 
 let wildcardQueryToJson ((name, wildcardBody) : string * (WildcardQueryField list) ) =
     Json.makeObject [
-        Json.makeKeyValue name (
-            match wildcardBody with
-            | [ wildcardBodyParam ] -> wildcardBodyParam.ToJson()
-            | [] -> Json.makeObject []
-            | _ -> failwithf $"Illegal wildcard query body {name}: %A{wildcardBody}"
-        )
+        Json.makeKeyValue name (Json.makeObject [
+            for field in wildcardBody ->
+                field.ToJson()
+        ])
     ]

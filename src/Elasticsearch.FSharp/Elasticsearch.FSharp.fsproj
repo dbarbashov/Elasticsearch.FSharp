@@ -19,6 +19,7 @@
   <ItemGroup>
     <Compile Include="Utility.fs" />
     <Compile Include="DSL\Script.fs" />
+    <Compile Include="DSL\RewriteOption.fs" />
     <Compile Include="DSL\Queries\TermQuery.fs" />
     <Compile Include="DSL\Queries\TermsQuery.fs" />
     <Compile Include="DSL\Queries\MatchQuery.fs" />

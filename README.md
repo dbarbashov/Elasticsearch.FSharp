@@ -62,3 +62,5 @@ Would result in following JSON:
   * [x] MatchPhrasePrefix query
   * [x] Exists query
   * [x] Type query
+  * [x] Wildcard query
+    * [x] `rewrite` and `boost` parameters
