@@ -13,6 +13,7 @@ type QueryBody =
     | Script of ScriptBody
     | MultiMatch of MultiMatchQuery
     | MatchPhrasePrefix of MatchPhrasePrefixQuery
+    | Nested of NestedQuery // Added Nested query type
     | Exists of FieldName: string
     | Raw of RawString: string
     | TypeEquals of string
@@ -23,3 +24,12 @@ and BoolQuery =
     | Should of QueryBody list
     | MustNot of QueryBody list
     | MinimumShouldMatch of string
+    
+and NestedQuery = NestedQueryField list
+
+and NestedQueryField =
+    | Path of string
+    | QueryBody of QueryBody
+    | ScoreMode of ScoreModeOption
+    | IgnoreUnmapped of bool
+

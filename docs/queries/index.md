@@ -16,6 +16,7 @@ This section provides details on the various query types supported by the Elasti
 - [Script Query](./script.md)
 - [Multi Match Query](./multi-match.md)
 - [Match Phrase Prefix Query](./match-phrase-prefix.md)
+- [Nested Query](./nested.md)
 - [Exists Query](./exists.md)
 - [Type Query](./type.md)
 - [Raw Query](./raw.md)

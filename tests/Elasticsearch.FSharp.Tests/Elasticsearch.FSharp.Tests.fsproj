@@ -18,7 +18,22 @@
         <Compile Include="Mapping.fs" />
         <Compile Include="Script.fs" />
         <Compile Include="Queries\ScriptQuery.fs" />
-        <Compile Include="Query.fs" />
+        <Compile Include="Queries\BoolQueryTests.fs" />
+        <Compile Include="Queries\ExistsQueryTests.fs" />
+        <Compile Include="Queries\IdsQueryTests.fs" />
+        <Compile Include="Queries\MatchAllQueryTests.fs" />
+        <Compile Include="Queries\MatchNoneQueryTests.fs" />
+        <Compile Include="Queries\MatchPhrasePrefixQueryTests.fs" />
+        <Compile Include="Queries\MatchQueryTests.fs" />
+        <Compile Include="Queries\MultiMatchQueryTests.fs" />
+        <Compile Include="Queries\NestedQueryTests.fs" />
+        <Compile Include="Queries\QueryBodyScriptTests.fs" />
+        <Compile Include="Queries\RangeQueryTests.fs" />
+        <Compile Include="Queries\RawQueryTests.fs" />
+        <Compile Include="Queries\TermQueryTests.fs" />
+        <Compile Include="Queries\TermsQueryTests.fs" />
+        <Compile Include="Queries\TypeQueryTests.fs" />
+        <Compile Include="Queries\WildcardQueryTests.fs" />
         <Compile Include="Sort.fs" />
         <Compile Include="Search.fs" />
     </ItemGroup>

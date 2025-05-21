@@ -2,6 +2,7 @@ module internal rec Elasticsearch.FSharp.DSL.Serialization.Query
 
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization.Queries
+open Elasticsearch.FSharp.DSL.Serialization.Queries.NestedQuery
 open Elasticsearch.FSharp.Utility
 
 type BoolQuery with
@@ -53,6 +54,8 @@ type QueryBody with
             Json.makeKeyValue "multi_match" (MultiMatchQuery.multimatchBodyToJson multimatchBody)
         | MatchPhrasePrefix matchPhrasePrefixBody ->
             Json.makeKeyValue "match_phrase_prefix" (MatchPhrasePrefixQuery.matchPhrasePrefixQueryToJson matchPhrasePrefixBody)
+        | Nested nestedQueryParams -> // Added case for Nested query
+            Json.makeKeyValue "nested" (NestedQuery.nestedQueryToJson queryBodyToJson nestedQueryParams)
         | Exists field ->
             Json.makeKeyValue "exists" (Json.makeObject [
                 Json.makeKeyValue "field" (Json.quoteString field)
