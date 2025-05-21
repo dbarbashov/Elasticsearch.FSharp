@@ -158,6 +158,49 @@ let ``"match_phrase_prefix* serializes correctly`` (fieldName, fieldValue, expan
     let actual = toJson query
     Assert.AreEqual(expected, actual)
 
+[<Property>]
+let ``"match_phrase_prefix" with rewrite and boost serializes correctly`` (fieldName, fieldValue, expansions : int, boostValue: float) =
+    let boost = System.Math.Round(boostValue, 2) // Round to make test predictable with float ToString
+    let query =
+        Search [
+            Query (
+                MatchPhrasePrefix (
+                    fieldName,
+                    [
+                        MatchPhrasePrefixQueryField.MatchQuery fieldValue
+                        MatchPhrasePrefixQueryField.MaxExpansions expansions
+                        MatchPhrasePrefixQueryField.Rewrite RewriteOption.ScoringBoolean
+                        MatchPhrasePrefixQueryField.Boost boost
+                    ]
+                )
+            )
+        ]
+    let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d,"rewrite":"scoring_boolean","boost":%s}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue) expansions (boost.ToString("F1", System.Globalization.CultureInfo.InvariantCulture))
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
+
+[<Property>]
+let ``"match_phrase_prefix" with rewrite top_terms_boost_N serializes correctly`` (fieldName, fieldValue, expansions, n:int) =
+    let nVal = abs n % 100 + 1
+    let query =
+        Search [
+            Query (
+                MatchPhrasePrefix (
+                    fieldName,
+                    [
+                        MatchPhrasePrefixQueryField.MatchQuery fieldValue
+                        MatchPhrasePrefixQueryField.MaxExpansions expansions
+                        MatchPhrasePrefixQueryField.Rewrite (RewriteOption.TopTermsBoost nVal)
+                    ]
+                )
+            )
+        ]
+    let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d,"rewrite":"top_terms_boost_%d"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString fieldValue) expansions nVal
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
+
 [<Property(MaxTest=10000)>]
 let ``"exists" serialization works correctly``(fieldName) =
     let query =
@@ -204,5 +247,40 @@ let ``"wildcard" serializes correctly``(fieldName, patternValue) =
         ]
     let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString patternValue)
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
+
+[<Property>]
+let ``"wildcard" with rewrite and boost serializes correctly``(fieldName, patternValue, boostValue: float) =
+    let boost = System.Math.Round(boostValue, 2) // Round to make test predictable with float ToString
+    let query =
+        Search [
+            Query (
+                Wildcard (fieldName, [
+                    PatternValue patternValue
+                    WildcardQueryField.Rewrite RewriteOption.ConstantScore
+                    WildcardQueryField.Boost boost
+                ])
+            )
+        ]
+    let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s","rewrite":"constant_score","boost":%s}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString patternValue) (boost.ToString("F1", System.Globalization.CultureInfo.InvariantCulture))
+    let actual = toJson query
+    Assert.AreEqual(expected, actual)
+
+[<Property>]
+let ``"wildcard" with rewrite top_terms_N serializes correctly``(fieldName, patternValue, n:int) =
+    let nVal = abs n % 100 + 1 // Ensure N is positive and reasonable for a test
+    let query =
+        Search [
+            Query (
+                Wildcard (fieldName, [
+                    PatternValue patternValue
+                    WildcardQueryField.Rewrite (RewriteOption.TopTerms nVal)
+                ])
+            )
+        ]
+    let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s","rewrite":"top_terms_%d"}}}}"""
+                       (Json.escapeString fieldName) (Json.escapeString patternValue) nVal
     let actual = toJson query
     Assert.AreEqual(expected, actual)

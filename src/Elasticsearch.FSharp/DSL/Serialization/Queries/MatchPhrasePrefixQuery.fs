@@ -14,7 +14,11 @@ type MatchPhrasePrefixQueryField with
         | MatchPhrasePrefixQueryField.Slop x ->
             Json.makeKeyValue "slop" (x.ToString())
         | MatchPhrasePrefixQueryField.Analyzer x ->
-            Json.makeKeyValue "analyzer" x
+            Json.makeKeyValue "analyzer" (Json.quoteString x)
+        | MatchPhrasePrefixQueryField.Rewrite opt ->
+            Json.makeKeyValue "rewrite" (Json.quoteString (opt.ToStringValue()))
+        | MatchPhrasePrefixQueryField.Boost b ->
+            Json.makeKeyValue "boost" (b.ToString())
 
 let matchPhrasePrefixQueryToJson ((name, matchBody) : string * (MatchPhrasePrefixQueryField list)) =
     Json.makeObject [
