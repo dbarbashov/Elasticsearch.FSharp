@@ -20,7 +20,7 @@ let ``"bool" with "must" serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"must":[{"match_all":{}}]}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``"bool" with "filter" serializes correctly``() =
@@ -36,7 +36,7 @@ let ``"bool" with "filter" serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"filter":[{"term":{"field":{"value":"value"}}}]}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``"bool" with "should" serializes correctly``() =
@@ -52,7 +52,7 @@ let ``"bool" with "should" serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"should":[{"match":{"field":{"query":"value"}}}]}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``"bool" with "must_not" serializes correctly``() =
@@ -68,10 +68,10 @@ let ``"bool" with "must_not" serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"must_not":[{"range":{"field":{"gte":"10"}}}]}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
-let ``"bool" with "minimum_should_match" serializes correctly`` =
+let ``"bool" with "minimum_should_match" serializes correctly``() =
     let msm = "1.0"
     
     let query =
@@ -85,7 +85,7 @@ let ``"bool" with "minimum_should_match" serializes correctly`` =
         ]
     let expected = sprintf """{"query":{"bool":{"should":[{"match_all":{}}],"minimum_should_match":"%s"}}}""" (Json.escapeString msm)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``"bool" with multiple clauses serializes correctly``() =
@@ -103,4 +103,4 @@ let ``"bool" with multiple clauses serializes correctly``() =
         ]
     let expected = """{"query":{"bool":{"must":[{"match":{"title":{"query":"elasticsearch"}}}],"filter":[{"term":{"status":{"value":"published"}}}],"must_not":[{"term":{"tags":{"value":"archived"}}}],"should":[{"match":{"content":{"query":"relevant"}}}],"minimum_should_match":"1"}}}"""
     let actual = toJson query
-    Assert.AreEqual(removeWhitespace expected, removeWhitespace actual)
+    Assert.That(removeWhitespace actual, Is.EqualTo(removeWhitespace expected))

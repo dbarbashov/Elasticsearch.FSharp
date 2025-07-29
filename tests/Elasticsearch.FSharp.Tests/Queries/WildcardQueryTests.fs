@@ -5,7 +5,6 @@ open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Property>]
 let ``"wildcard" base serializes correctly``(fieldName, patternValue) =
@@ -18,7 +17,7 @@ let ``"wildcard" base serializes correctly``(fieldName, patternValue) =
     let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString patternValue)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"wildcard" with rewrite and boost serializes correctly``(fieldName, patternValue, boostValue: float) =
@@ -36,7 +35,7 @@ let ``"wildcard" with rewrite and boost serializes correctly``(fieldName, patter
     let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s","rewrite":"constant_score","boost":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString patternValue) (boost.ToString())
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"wildcard" with rewrite top_terms_N serializes correctly``(fieldName, patternValue, n:int) =
@@ -53,4 +52,4 @@ let ``"wildcard" with rewrite top_terms_N serializes correctly``(fieldName, patt
     let expected = sprintf """{"query":{"wildcard":{"%s":{"value":"%s","rewrite":"top_terms_%d"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString patternValue) nVal
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

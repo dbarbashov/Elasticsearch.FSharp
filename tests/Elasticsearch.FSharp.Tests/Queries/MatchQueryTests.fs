@@ -5,7 +5,6 @@ open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Property>]
 let ``"match" base serializes correctly``(fieldName, fieldValue) =
@@ -18,7 +17,7 @@ let ``"match" base serializes correctly``(fieldName, fieldValue) =
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match" with operator serializes correctly``(fieldName, fieldValue, op) =
@@ -31,7 +30,7 @@ let ``"match" with operator serializes correctly``(fieldName, fieldValue, op) =
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s","operator":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) (Json.escapeString op)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match" with zero_terms_query serializes correctly (current behavior)``(fieldName, fieldValue) =
@@ -49,7 +48,7 @@ let ``"match" with zero_terms_query serializes correctly (current behavior)``(fi
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s","zero_terms_query":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) zeroTerms // zeroTerms is not quoted here
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match" with cutoff_frequency serializes correctly``(fieldName, fieldValue, cutoff: float) =
@@ -63,7 +62,7 @@ let ``"match" with cutoff_frequency serializes correctly``(fieldName, fieldValue
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s","cutoff_frequency":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) cutoffStr
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``"match" with all fields serializes correctly (current behavior)``() =
@@ -86,4 +85,4 @@ let ``"match" with all fields serializes correctly (current behavior)``() =
     let expected = sprintf """{"query":{"match":{"%s":{"query":"%s","operator":"%s","zero_terms_query":%s,"cutoff_frequency":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) (Json.escapeString op) zeroTerms (cutoff.ToString())
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

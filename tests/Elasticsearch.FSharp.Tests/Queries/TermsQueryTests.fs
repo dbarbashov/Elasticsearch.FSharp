@@ -5,7 +5,6 @@ open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Property>]
 let ``"terms" with value list serializes correctly``(fieldName, fieldValue) =
@@ -18,7 +17,7 @@ let ``"terms" with value list serializes correctly``(fieldName, fieldValue) =
     let expected = sprintf """{"query":{"terms":{"%s":["%s"]}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"terms" with lookup serializes correctly``(fieldName, index, esType, id, path) =
@@ -31,4 +30,4 @@ let ``"terms" with lookup serializes correctly``(fieldName, index, esType, id, p
     let expected = sprintf """{"query":{"terms":{"%s":{"index":"%s","type":"%s","id":"%s","path":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString index) (Json.escapeString esType) (Json.escapeString id) (Json.escapeString path)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
