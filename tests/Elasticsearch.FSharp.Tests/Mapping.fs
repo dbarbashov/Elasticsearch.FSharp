@@ -6,6 +6,7 @@ open NUnit.Framework
 
 open Elasticsearch.FSharp.Mapping.Attributes
 open Elasticsearch.FSharp.Mapping.Json
+open NUnit.Framework.Legacy
 
 [<ElasticType("custom_entity_name")>]
 type TestEntity = {
@@ -63,7 +64,7 @@ let ``Type serializes correctly``() =
                 }
             }"""
     let actual = mappingJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Test>]
 let ``Type serializes correctly with excluded type name``() =
@@ -90,7 +91,7 @@ let ``Type serializes correctly with excluded type name``() =
                 }
             }"""
     let actual = mappingJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Test>]
 let ``Type serializes correctly with settings``() =
@@ -132,7 +133,7 @@ let ``Type serializes correctly with settings``() =
                 }
             }"""
     let actual = mappingJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Test>]
 let ``Type serializes correctly to put mappings json``() =
@@ -221,8 +222,7 @@ let ``Recursive type serializes correctly``() =
                 }
             }"""
     let actual = mappingJson
-    printf "%s" mappingJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``Custom field name serializes correctly``() =
@@ -254,4 +254,4 @@ let ``Custom field name serializes correctly``() =
                 }
             }"""
     let actual = mappingJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

@@ -3,7 +3,6 @@ module Elasticsearch.FSharp.Tests.Queries.IdsQueryTests
 open NUnit.Framework
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
-open Elasticsearch.FSharp.Utility
 
 [<Test>]
 let ``"ids" serializes correctly``() =
@@ -13,4 +12,4 @@ let ``"ids" serializes correctly``() =
         ]
     let expected = """{"query":{"ids":{"values":["foo","bar"]}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

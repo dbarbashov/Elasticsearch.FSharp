@@ -15,7 +15,7 @@ let ``Query serializes correctly``() =
         ]
     let expected = """{"query":{"match_all":{}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Test>]
 let ``Sort serializes correctly``() =
@@ -27,7 +27,7 @@ let ``Sort serializes correctly``() =
         ]
     let expected = """{"sort":[{"myField":{"order":"asc","mode":"avg"}}]}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Property(MaxTest=10000)>]
 let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldName2, paramName, paramValue) =
@@ -58,7 +58,7 @@ let ``ScriptFields serializes correctly``(script1, script2, fieldName1, fieldNam
             (Json.escapeString paramValue)
             
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Property(MaxTest=10000)>]
 let ``Script serializes correctly``(script1, paramName, paramValue) =
@@ -87,7 +87,7 @@ let ``Script serializes correctly``(script1, paramName, paramValue) =
             (Json.escapeString paramValue)
             
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Property(MaxTest=10000)>]
 let ``Aggs serializes correctly``(aggName, aggFieldName) =
@@ -104,7 +104,7 @@ let ``Aggs serializes correctly``(aggName, aggFieldName) =
     let expected = sprintf """{"aggs":{"%s":{"avg":{"field":"%s"}}}}"""
                        (Json.escapeString aggName) (Json.escapeString aggFieldName)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) =
@@ -122,7 +122,7 @@ let ``Weighted agg serializes correctly``(aggName, aggFieldName, aggValueField) 
     let expected = sprintf """{"aggs":{"%s":{"weighted_avg":{"value":{"field":"%s"},"weight":{"field":"%s"}}}}}"""
                        (Json.escapeString aggName) (Json.escapeString aggValueField) (Json.escapeString aggFieldName)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``Value count aggregation serializes correctly``(aggName, aggFieldName) =
@@ -139,7 +139,7 @@ let ``Value count aggregation serializes correctly``(aggName, aggFieldName) =
             ]
         ]
         |> toJson
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property(MaxTest=10000)>]
 let ``Complex aggs serializes correctly``(complexAggName, complexAggFieldName,
@@ -172,7 +172,7 @@ let ``Complex aggs serializes correctly``(complexAggName, complexAggFieldName,
                        (Json.escapeString complexFilterAggField) (Json.escapeString simpleAggName)
                        (Json.escapeString simpleAggField)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Property>]
 let ``From serializes correctly``(from) =
@@ -182,7 +182,7 @@ let ``From serializes correctly``(from) =
         ]
     let expected = sprintf """{"from":%d}""" from
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Property>]
 let ``Size serializes correctly``(size) =
@@ -192,7 +192,7 @@ let ``Size serializes correctly``(size) =
         ]
     let expected = sprintf """{"size":%d}""" size
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
     
 [<Test>]
 let ``Source serializes correctly``() =
@@ -202,7 +202,7 @@ let ``Source serializes correctly``() =
         ]
     let expected = """{"_source":false}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Test>]
 let ``Raw serialized correctly``() =
@@ -212,4 +212,4 @@ let ``Raw serialized correctly``() =
         ]
     let expected = """{"query":{"match_all":{}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

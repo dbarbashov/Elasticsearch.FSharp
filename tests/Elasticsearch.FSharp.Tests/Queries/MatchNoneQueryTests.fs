@@ -13,4 +13,4 @@ let ``"match_none" serializes correctly``() =
         ]
     let expected = """{"query":{"match_none":{}}}"""
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

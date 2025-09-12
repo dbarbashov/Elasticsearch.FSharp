@@ -23,7 +23,7 @@ let ``"match_phrase_prefix" base serializes correctly`` (fieldName, fieldValue, 
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) expansions
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match_phrase_prefix" with boost serializes correctly`` (fieldName, fieldValue, expansions : int, boostValue: float) =
@@ -44,7 +44,7 @@ let ``"match_phrase_prefix" with boost serializes correctly`` (fieldName, fieldV
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d,"boost":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) expansions (boost.ToString())
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match_phrase_prefix" with slop serializes correctly`` (fieldName, fieldValue, slopVal: int) =
@@ -62,7 +62,7 @@ let ``"match_phrase_prefix" with slop serializes correctly`` (fieldName, fieldVa
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","slop":%d}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) slopVal
-    Assert.AreEqual(expected, toJson query)
+    Assert.That(toJson query, Is.EqualTo(expected))
 
 [<Property>]
 let ``"match_phrase_prefix" with analyzer serializes correctly`` (fieldName, fieldValue, analyzerName) =
@@ -80,7 +80,7 @@ let ``"match_phrase_prefix" with analyzer serializes correctly`` (fieldName, fie
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","analyzer":"%s"}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) (Json.escapeString analyzerName)
-    Assert.AreEqual(expected, toJson query)
+    Assert.That(toJson query, Is.EqualTo(expected))
 
 [<Test>]
 let ``"match_phrase_prefix" with all fields serializes correctly`` () =
@@ -107,4 +107,4 @@ let ``"match_phrase_prefix" with all fields serializes correctly`` () =
         ]
     let expected = sprintf """{"query":{"match_phrase_prefix":{"%s":{"query":"%s","max_expansions":%d,"slop":%d,"analyzer":"%s","boost":%s}}}}"""
                        (Json.escapeString fieldName) (Json.escapeString fieldValue) maxExp slopVal (Json.escapeString analyzerName) (boostVal.ToString())
-    Assert.AreEqual(expected, toJson query)
+    Assert.That(toJson query, Is.EqualTo(expected))

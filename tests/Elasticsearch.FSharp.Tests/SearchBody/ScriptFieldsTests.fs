@@ -5,7 +5,6 @@ open FsCheck.NUnit
 open Elasticsearch.FSharp.DSL
 open Elasticsearch.FSharp.DSL.Serialization
 open Elasticsearch.FSharp.Utility
-open Elasticsearch.FSharp.Tests.Helpers
 
 [<Property>]
 let ``"script_fields" in search body serializes correctly`` scriptName scriptSource =
@@ -19,4 +18,4 @@ let ``"script_fields" in search body serializes correctly`` scriptName scriptSou
     let expected = sprintf """{"query":{"match_all":{}},"script_fields":{"%s":{"script":{"lang":"painless","source":"%s"}}}}"""
                        (Json.escapeString scriptName) (Json.escapeString scriptSource)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))

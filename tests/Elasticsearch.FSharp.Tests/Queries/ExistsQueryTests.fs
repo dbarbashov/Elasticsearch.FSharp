@@ -16,4 +16,4 @@ let ``"exists" serialization works correctly``(fieldName) =
         ]
     let expected = sprintf """{"query":{"exists":{"field":"%s"}}}""" (Json.escapeString fieldName)
     let actual = toJson query
-    Assert.AreEqual(expected, actual)
+    Assert.That(actual, Is.EqualTo(expected))
